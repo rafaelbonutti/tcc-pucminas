@@ -2,8 +2,8 @@ package br.pucminas.rest;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.OptimisticLockException;
 import javax.ws.rs.Consumes;
@@ -29,7 +29,7 @@ import br.pucminas.model.Aluno;
 @Path("/alunos")
 public class AlunoEndpoint {
 	
-	@EJB
+	@Inject
 	private AlunoDao alunoDao;
 
 	@POST

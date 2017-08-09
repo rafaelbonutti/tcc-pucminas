@@ -33,10 +33,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>jpa</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.38</version>
@@ -48,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>jaxrs-cdi</artifactId>
+			<artifactId>cdi</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
@@ -61,6 +57,10 @@
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>datasources</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wildfly.swarm</groupId>
+			<artifactId>jsf</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

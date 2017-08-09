@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="page" value='#{alunoBean.page}'/>
+		<f:event type="preRenderView" listener='#{alunoBean.paginate}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="Search Aluno entities"/>
+
+	<ui:define name="header">
+		Aluno
+	</ui:define>
+
+	<ui:define name="subheader">
+		Search Aluno entities
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:form id="search">
+			<f:validateBean disabled="true">
+				<h:panelGroup styleClass="search">
+
+					<h:panelGrid columnClasses="label,component,required" columns="3">
+						<h:outputLabel for="alunoBeanExampleNome" value="Nome:"/>
+						<h:panelGroup>
+							<h:inputText id="alunoBeanExampleNome" maxLength="200" value="#{alunoBean.example.nome}"/>
+							<h:message for="alunoBeanExampleNome" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+						<h:outputLabel for="alunoBeanExampleCpf" value="Cpf:"/>
+						<h:panelGroup>
+							<h:inputText id="alunoBeanExampleCpf" maxLength="11" value="#{alunoBean.example.cpf}"/>
+							<h:message for="alunoBeanExampleCpf" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+					</h:panelGrid>
+					<h:panelGroup styleClass="buttons">
+						<h:commandLink value="Search" action='#{alunoBean.search}' styleClass="btn btn-primary"/>
+						<h:commandLink value="Create New" action='#{alunoBean.create}' styleClass="btn btn-primary"/>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:validateBean>
+			
+			<h:dataTable id="alunoBeanPageItems" styleClass="data-table" value="#{alunoBean.pageItems}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Nome"/>
+					</f:facet>
+					<h:link outcome="/aluno/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemNome" value="#{_item.nome}"/>
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Cpf"/>
+					</f:facet>
+					<h:link outcome="/aluno/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemCpf" value="#{_item.cpf}"/>
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Dt Nascimento"/>
+					</f:facet>
+					<h:link outcome="/aluno/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemDtNascimento" value="#{_item.dtNascimento}">
+							<f:convertDateTime type="date"/>
+						</h:outputText>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<ui:include src="/resources/scaffold/paginator.xhtml">
+				<ui:param name="paginatorBean" value='#{alunoBean}'/>
+			</ui:include>
+		</h:form>
+			
+	</ui:define>
+
+</ui:composition>
