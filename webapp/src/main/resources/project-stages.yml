@@ -1,0 +1,5 @@
+logger:
+    level: DEBUG
+swarm:
+  port:
+    offset: 1
