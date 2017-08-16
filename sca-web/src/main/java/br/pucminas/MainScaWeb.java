@@ -1,8 +1,10 @@
 package br.pucminas;
 
 import org.wildfly.swarm.Swarm;
+import org.wildfly.swarm.topology.Advertise;
 
-public class Main {
+@Advertise("sca-web")
+public class MainScaWeb {
 
 	public static void main(String[] args) throws Exception {
 		Swarm swarm = new Swarm();

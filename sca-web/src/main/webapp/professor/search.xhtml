@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="page" value='#{professorBean.page}' />
+		<f:event type="preRenderView" listener='#{professorBean.paginate}' />
+	</f:metadata>
+
+<!-- 	<ui:param name="pageTitle" value="Search Professor entities" /> -->
+
+	<ui:define name="header">
+		Professor
+	</ui:define>
+
+<!-- 	<ui:define name="subheader">
+		Search Professor entities
+	</ui:define> -->
+
+	<ui:define name="footer" />
+
+	<ui:define name="main">
+		<h:form id="search">
+			<f:validateBean disabled="true">
+				<h:panelGroup styleClass="search">
+
+<!-- 					<h:panelGrid columnClasses="label,component,required" columns="3">
+						<h:outputLabel for="professorBeanExampleNome" value="Nome:" />
+						<h:panelGroup>
+							<h:inputText id="professorBeanExampleNome" maxLength="200"
+								value="#{professorBean.example.nome}" />
+							<h:message for="professorBeanExampleNome" styleClass="error" />
+						</h:panelGroup>
+						<h:outputText />
+						<h:outputLabel for="professorBeanExampleCpf" value="CPF" />
+						<h:panelGroup>
+							<h:inputText id="professorBeanExampleCpf" maxLength="11"
+								value="#{professorBean.example.cpf}" />
+							<h:message for="professorBeanExampleCpf" styleClass="error" />
+						</h:panelGroup>
+						<h:outputText />
+					</h:panelGrid> -->
+					<h:panelGroup styleClass="buttons">
+						<h:commandLink value="Search" action='#{professorBean.search}' styleClass="btn btn-primary" />
+						<h:commandLink value="Create New" action='#{professorBean.create}'
+							styleClass="btn btn-primary" />
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:validateBean>
+
+			<h:dataTable id="professorBeanPageItems" styleClass="data-table"
+				value="#{professorBean.pageItems}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Nome" />
+					</f:facet>
+					<h:link outcome="/professor/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemNome" value="#{_item.nome}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="CPF" />
+					</f:facet>
+					<h:link outcome="/professor/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCpf" value="#{_item.cpf}" />
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<ui:include src="/resources/scaffold/paginator.xhtml">
+				<ui:param name="paginatorBean" value='#{professorBean}' />
+			</ui:include>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

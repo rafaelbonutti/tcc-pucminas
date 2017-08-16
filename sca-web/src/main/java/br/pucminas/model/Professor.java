@@ -11,11 +11,9 @@ import javax.persistence.Version;
 import java.util.Date;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "TBPROFESSOR")
-@XmlRootElement
 public class Professor implements Serializable {
 
 	private static final long serialVersionUID = 1L;

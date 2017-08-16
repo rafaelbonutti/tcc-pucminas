@@ -1,8 +1,11 @@
+service:
+  catalog:
+    service-name: sca-web
 logger:
-    level: DEBUG
+  level: DEBUG
 swarm:
   port:
-    offset: 0
+    offset: 1
   bind:
 #    address: 172.31.11.198
     address: 192.168.25.86
@@ -11,4 +14,4 @@ swarm:
       url: http://127.0.0.1:8500
 java:
   net:
-    preferIPv4Stack: true
+      preferIPv4Stack: true
