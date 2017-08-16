@@ -6,7 +6,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 
 @Provider
-public class NewCrossOriginResourceSharingFilter
+public class CORSFilter
 		implements
 			ContainerResponseFilter {
 

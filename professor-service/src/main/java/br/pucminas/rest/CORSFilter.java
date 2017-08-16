@@ -6,7 +6,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 
 @Provider
-public class CorsFilter implements ContainerResponseFilter {
+public class CORSFilter implements ContainerResponseFilter {
 
 	@Override
 	public void filter(ContainerRequestContext request,
