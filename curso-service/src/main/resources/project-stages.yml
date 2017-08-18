@@ -1,6 +1,6 @@
 service:
   catalog:
-    service-name: aluno-service
+    service-name: curso-service
 logger:
   level: DEBUG
 swarm:
@@ -12,7 +12,7 @@ swarm:
         user-name: sa
         password: sa
   port:
-    offset: 10
+    offset: 15
   bind:
 #    address: 172.31.11.198
     address: 192.168.25.86

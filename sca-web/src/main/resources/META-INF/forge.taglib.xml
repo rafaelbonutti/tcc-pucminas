@@ -13,7 +13,7 @@
 
 	<function>
 		<function-name>asList</function-name>
-		<function-class>br.pucminas.view.ViewUtils</function-class>
+		<function-class>br.pucminas.web.view.ViewUtils</function-class>
 		<function-signature>
 			java.util.List asList(java.util.Collection)
 		</function-signature>
@@ -21,7 +21,7 @@
     
     <function>
         <function-name>display</function-name>
-        <function-class>br.pucminas.view.ViewUtils</function-class>
+        <function-class>br.pucminas.web.view.ViewUtils</function-class>
         <function-signature>
             java.lang.String display(java.lang.Object)
         </function-signature>
