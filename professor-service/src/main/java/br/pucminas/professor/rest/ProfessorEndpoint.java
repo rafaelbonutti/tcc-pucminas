@@ -19,10 +19,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 
 import br.pucminas.professor.model.Professor;
-
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * 
@@ -34,7 +33,7 @@ public class ProfessorEndpoint {
 	private EntityManager em;
 
 	@POST
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8")
 	public Response create(Professor entity) {
 		em.persist(entity);
 		return Response.created(
@@ -55,7 +54,7 @@ public class ProfessorEndpoint {
 
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8")
 	public Response findById(@PathParam("id") Long id) {
 		TypedQuery<Professor> findByIdQuery = em
 				.createQuery(
@@ -75,7 +74,7 @@ public class ProfessorEndpoint {
 	}
 
 	@GET
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8")
 	public Response listAll(@QueryParam("start") Integer startPosition,
 			@QueryParam("max") Integer maxResult) {
 		
@@ -106,7 +105,7 @@ public class ProfessorEndpoint {
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8")
 	public Response update(@PathParam("id") Long id, Professor entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();

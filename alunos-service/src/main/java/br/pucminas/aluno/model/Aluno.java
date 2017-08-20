@@ -21,20 +21,20 @@ public class Aluno implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
+	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
 	@Version
-	@Column(name = "version")
+	@Column(name = "VERSION")
 	private int version;
 
-	@Column(length = 200, name = "nome", nullable = false)
+	@Column(length = 200, name = "NOME", nullable = false)
 	private String nome;
 
-	@Column(length = 11, name = "cpf", nullable = false)
+	@Column(length = 11, name = "CPF", nullable = false)
 	private Long cpf;
 
-	@Column(name = "dtnascimento", nullable = false)
+	@Column(name = "DATANASCIMENTO", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 

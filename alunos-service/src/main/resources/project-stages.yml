@@ -7,10 +7,14 @@ swarm:
   datasources:
     data-sources:
       ExampleDS:
-        driver-name: h2
-        connection-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-        user-name: sa
-        password: sa
+#        driver-name: h2
+#        connection-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#        user-name: sa
+#        password: sa
+        driver-name: mysql
+        connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca
+        user-name: sca
+        password: sca84354637
   port:
     offset: 10
   bind:

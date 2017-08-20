@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:forgeview="http://jboss.org/forge/view"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="id" value='#{cursoBean.id}'/>
+		<f:event type="preRenderView" listener='#{cursoBean.retrieve}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="View Curso"/>
+
+	<ui:define name="header">
+		Curso
+	</ui:define>
+
+	<ui:define name="subheader">
+		View existing Curso
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:panelGrid columnClasses="label,component,required" columns="3">
+			<h:outputLabel for="cursoBeanCursoNome" value="Nome:"/>
+			<h:outputText id="cursoBeanCursoNome" value="#{cursoBean.curso.nome}"/>
+			<h:outputText/>
+			<h:outputLabel for="cursoBeanCursoDescricao" value="Descricao:"/>
+			<h:inputTextarea id="cursoBeanCursoDescricao" value="#{cursoBean.curso.descricao}"/>
+			<h:outputText/>
+			<h:outputLabel for="cursoBeanCursoModalidade" value="Modalidade:"/>
+			<h:outputText id="cursoBeanCursoModalidade" value="#{cursoBean.curso.modalidade}"/>
+			<h:outputText/>
+			<h:outputLabel for="cursoBeanCursoCodigo" value="Codigo:"/>
+			<h:outputText id="cursoBeanCursoCodigo" value="#{cursoBean.curso.codigo}"/>
+			<h:outputText/>
+			<h:outputLabel for="cursoBeanCursoCurriculo" value="Curriculo:"/>
+			<h:dataTable id="cursoBeanCursoCurriculo" styleClass="data-table" value="#{forgeview:asList(cursoBean.curso.curriculo)}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Semestre"/>
+					</f:facet>
+					<h:link outcome="/curriculo/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemSemestre" value="#{_item.semestre}"/>
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Ano"/>
+					</f:facet>
+					<h:link outcome="/curriculo/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemAno" value="#{_item.ano}"/>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<h:outputText/>
+		</h:panelGrid>
+
+		<div class="buttons">
+			<h:link value="View All" outcome="search" styleClass="btn btn-primary"/> 
+			<h:link value="Edit" outcome="create" includeViewParams="true" styleClass="btn btn-primary"/>
+			<h:link value="Create New" outcome="create" styleClass="btn btn-primary"/>
+		</div>
+	</ui:define>
+
+</ui:composition>

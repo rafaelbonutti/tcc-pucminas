@@ -32,7 +32,7 @@ public class CursoEndpoint {
 	private EntityManager em;
 
 	@POST
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8; charset=utf-8")
 	public Response create(Curso entity) {
 		em.persist(entity);
 		return Response.created(
@@ -53,11 +53,11 @@ public class CursoEndpoint {
 
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8; charset=utf-8")
 	public Response findById(@PathParam("id") Long id) {
 		TypedQuery<Curso> findByIdQuery = em
 				.createQuery(
-						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.areaConhecimento WHERE c.id = :entityId ORDER BY c.id",
+						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.curriculo WHERE c.id = :entityId ORDER BY c.id",
 						Curso.class);
 		findByIdQuery.setParameter("entityId", id);
 		Curso entity;
@@ -73,12 +73,12 @@ public class CursoEndpoint {
 	}
 
 	@GET
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8; charset=utf-8")
 	public List<Curso> listAll(@QueryParam("start") Integer startPosition,
 			@QueryParam("max") Integer maxResult) {
 		TypedQuery<Curso> findAllQuery = em
 				.createQuery(
-						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.areaConhecimento ORDER BY c.id",
+						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.curriculo ORDER BY c.id",
 						Curso.class);
 		if (startPosition != null) {
 			findAllQuery.setFirstResult(startPosition);
@@ -92,7 +92,7 @@ public class CursoEndpoint {
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8; charset=utf-8")
 	public Response update(@PathParam("id") Long id, Curso entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();

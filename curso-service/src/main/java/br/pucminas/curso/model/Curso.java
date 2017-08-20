@@ -1,7 +1,10 @@
 package br.pucminas.curso.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,12 +13,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "TBCURSO")
@@ -25,11 +29,11 @@ public class Curso implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
+	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
 	@Version
-	@Column(name = "version")
+	@Column(name = "VERSION")
 	private int version;
 
 	@Column(length = 100, name = "NOME")
@@ -46,9 +50,9 @@ public class Curso implements Serializable {
 	@Column(name = "MODALIDADE", length = 1)
 	private Modalidade modalidade;
 
-	@OneToOne(targetEntity = AreaConhecimento.class, fetch = FetchType.EAGER)
-	@JoinColumn(name = "FKAREACONHECIMENTO")
-	private AreaConhecimento areaConhecimento;
+	@JsonManagedReference
+	@OneToMany(targetEntity = Curriculo.class, mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<Curriculo> curriculo = new HashSet<Curriculo>();
 
 	public Long getId() {
 		return this.id;
@@ -123,14 +127,6 @@ public class Curso implements Serializable {
 		this.codigo = codigo;
 	}
 
-	public AreaConhecimento getAreaConhecimento() {
-		return areaConhecimento;
-	}
-
-	public void setAreaConhecimento(AreaConhecimento areaConhecimento) {
-		this.areaConhecimento = areaConhecimento;
-	}
-
 	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
@@ -140,4 +136,13 @@ public class Curso implements Serializable {
 			result += ", descricao: " + descricao;
 		return result;
 	}
+
+	public Set<Curriculo> getCurriculo() {
+		return this.curriculo;
+	}
+
+	public void setCurriculo(final Set<Curriculo> curriculo) {
+		this.curriculo = curriculo;
+	}
+
 }

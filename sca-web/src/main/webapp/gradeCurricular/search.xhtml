@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:forgeview="http://jboss.org/forge/view"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="page" value='#{gradeCurricularBean.page}'/>
+		<f:event type="preRenderView" listener='#{gradeCurricularBean.paginate}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="Search Grade Curricular entities"/>
+
+	<ui:define name="header">
+		Grade Curricular
+	</ui:define>
+
+	<ui:define name="subheader">
+		Search Grade Curricular entities
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:form id="search">
+			<f:validateBean disabled="true">
+				<h:panelGroup styleClass="search">
+
+					<h:panelGrid columnClasses="label,component,required" columns="3">
+						<h:outputLabel for="gradeCurricularBeanExampleCurriculo" value="Curriculo:"/>
+						<h:panelGroup>
+							<h:selectOneMenu converter="#{curriculoBean.converter}" id="gradeCurricularBeanExampleCurriculo" value="#{gradeCurricularBean.example.curriculo}">
+								<f:selectItem/>
+								<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{curriculoBean.all}" var="_item"/>
+							</h:selectOneMenu>
+							<h:message for="gradeCurricularBeanExampleCurriculo" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+						<h:outputLabel for="gradeCurricularBeanExampleDisciplina" value="Disciplina:"/>
+						<h:panelGroup>
+							<h:inputText id="gradeCurricularBeanExampleDisciplina" value="#{gradeCurricularBean.example.disciplina}"/>
+							<h:message for="gradeCurricularBeanExampleDisciplina" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+					</h:panelGrid>
+					<h:panelGroup styleClass="buttons">
+						<h:commandLink value="Search" action='#{gradeCurricularBean.search}' styleClass="btn btn-primary"/>
+						<h:commandLink value="Create New" action='#{gradeCurricularBean.create}' styleClass="btn btn-primary"/>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:validateBean>
+			
+			<h:dataTable id="gradeCurricularBeanPageItems" styleClass="data-table" value="#{gradeCurricularBean.pageItems}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Curriculo"/>
+					</f:facet>
+					<h:link outcome="/gradeCurricular/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="forgeview:display(_itemCurriculo)" value="#{forgeview:display(_item.curriculo)}"/>
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Disciplina"/>
+					</f:facet>
+					<h:link outcome="/gradeCurricular/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="_itemDisciplina" value="#{_item.disciplina}"/>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<ui:include src="/resources/scaffold/paginator.xhtml">
+				<ui:param name="paginatorBean" value='#{gradeCurricularBean}'/>
+			</ui:include>
+		</h:form>
+			
+	</ui:define>
+
+</ui:composition>

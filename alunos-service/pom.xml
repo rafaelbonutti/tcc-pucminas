@@ -32,11 +32,11 @@
 			<artifactId>javaee-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.187</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>jaxrs</artifactId>
@@ -64,6 +64,11 @@
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>topology-consul</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.42</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

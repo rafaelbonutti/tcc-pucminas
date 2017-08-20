@@ -1,32 +1,40 @@
 package br.pucminas.curso.model;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
-import javax.persistence.Table;
-import javax.persistence.Id;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "TBAREACONHECIMENTO")
+@Table(name = "TBGRADECURRICULAR")
 @XmlRootElement
-public class AreaConhecimento implements Serializable {
+public class GradeCurricular implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
+	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
 	@Version
-	@Column(name = "version")
+	@Column(name = "VERSION")
 	private int version;
 
-	@Column(length = 100, name = "DESCRICAO")
-	private String descricao;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "FKCURRICULO")
+	private Curriculo curriculo;
+
+	@Column(name = "DISCIPLINA")
+	private Long disciplina;
 
 	public Long getId() {
 		return this.id;
@@ -49,10 +57,10 @@ public class AreaConhecimento implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AreaConhecimento)) {
+		if (!(obj instanceof GradeCurricular)) {
 			return false;
 		}
-		AreaConhecimento other = (AreaConhecimento) obj;
+		GradeCurricular other = (GradeCurricular) obj;
 		if (id != null) {
 			if (!id.equals(other.id)) {
 				return false;
@@ -69,19 +77,28 @@ public class AreaConhecimento implements Serializable {
 		return result;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public Curriculo getCurriculo() {
+		return this.curriculo;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setCurriculo(final Curriculo curriculo) {
+		this.curriculo = curriculo;
+	}
+
+	public Long getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(Long disciplina) {
+		this.disciplina = disciplina;
 	}
 
 	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
-		if (descricao != null && !descricao.trim().isEmpty())
-			result += "descricao: " + descricao;
+		if (disciplina != null)
+			result += "disciplina: " + disciplina;
 		return result;
 	}
+
 }

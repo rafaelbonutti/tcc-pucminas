@@ -20,30 +20,30 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import br.pucminas.curso.model.AreaConhecimento;
+import br.pucminas.curso.model.Curriculo;
 
 /**
  * 
  */
 @Stateless
-@Path("/areas")
-public class AreaConhecimentoEndpoint {
+@Path("/curriculos")
+public class CurriculoEndpoint {
 	@PersistenceContext(unitName = "curso-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
-	@Consumes("application/json")
-	public Response create(AreaConhecimento entity) {
+	@Consumes("application/json; charset=utf-8")
+	public Response create(Curriculo entity) {
 		em.persist(entity);
 		return Response.created(
-				UriBuilder.fromResource(AreaConhecimentoEndpoint.class)
+				UriBuilder.fromResource(CurriculoEndpoint.class)
 						.path(String.valueOf(entity.getId())).build()).build();
 	}
 
 	@DELETE
 	@Path("/{id:[0-9][0-9]*}")
 	public Response deleteById(@PathParam("id") Long id) {
-		AreaConhecimento entity = em.find(AreaConhecimento.class, id);
+		Curriculo entity = em.find(Curriculo.class, id);
 		if (entity == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -53,14 +53,14 @@ public class AreaConhecimentoEndpoint {
 
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8")
 	public Response findById(@PathParam("id") Long id) {
-		TypedQuery<AreaConhecimento> findByIdQuery = em
+		TypedQuery<Curriculo> findByIdQuery = em
 				.createQuery(
-						"SELECT DISTINCT a FROM AreaConhecimento a WHERE a.id = :entityId ORDER BY a.id",
-						AreaConhecimento.class);
+						"SELECT DISTINCT c FROM Curriculo c LEFT JOIN FETCH c.curso WHERE c.id = :entityId ORDER BY c.id",
+						Curriculo.class);
 		findByIdQuery.setParameter("entityId", id);
-		AreaConhecimento entity;
+		Curriculo entity;
 		try {
 			entity = findByIdQuery.getSingleResult();
 		} catch (NoResultException nre) {
@@ -73,27 +73,27 @@ public class AreaConhecimentoEndpoint {
 	}
 
 	@GET
-	@Produces("application/json")
-	public List<AreaConhecimento> listAll(
-			@QueryParam("start") Integer startPosition,
+	@Produces("application/json; charset=utf-8")
+	public List<Curriculo> listAll(@QueryParam("start") Integer startPosition,
 			@QueryParam("max") Integer maxResult) {
-		TypedQuery<AreaConhecimento> findAllQuery = em.createQuery(
-				"SELECT DISTINCT a FROM AreaConhecimento a ORDER BY a.id",
-				AreaConhecimento.class);
+		TypedQuery<Curriculo> findAllQuery = em
+				.createQuery(
+						"SELECT DISTINCT c FROM Curriculo c LEFT JOIN FETCH c.curso ORDER BY c.id",
+						Curriculo.class);
 		if (startPosition != null) {
 			findAllQuery.setFirstResult(startPosition);
 		}
 		if (maxResult != null) {
 			findAllQuery.setMaxResults(maxResult);
 		}
-		final List<AreaConhecimento> results = findAllQuery.getResultList();
+		final List<Curriculo> results = findAllQuery.getResultList();
 		return results;
 	}
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
-	@Consumes("application/json")
-	public Response update(@PathParam("id") Long id, AreaConhecimento entity) {
+	@Consumes("application/json; charset=utf-8")
+	public Response update(@PathParam("id") Long id, Curriculo entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
@@ -103,7 +103,7 @@ public class AreaConhecimentoEndpoint {
 		if (!id.equals(entity.getId())) {
 			return Response.status(Status.CONFLICT).entity(entity).build();
 		}
-		if (em.find(AreaConhecimento.class, id) == null) {
+		if (em.find(Curriculo.class, id) == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		try {

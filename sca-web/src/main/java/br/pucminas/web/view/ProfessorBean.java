@@ -17,8 +17,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.naming.NamingException;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -38,6 +38,8 @@ import com.netflix.ribbon.http.HttpRequestTemplate;
 import com.netflix.ribbon.http.HttpResourceGroup;
 import com.netflix.ribbon.hystrix.FallbackHandler;
 
+import br.pucminas.web.consul.ConsulServices;
+import br.pucminas.web.consul.ServiceDiscovery;
 import br.pucminas.web.model.Professor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -48,20 +50,17 @@ import rx.observables.BlockingObservable;
  * Backing bean for Professor entities.
  */
 
-@javax.inject.Named
+@Named
 @Stateful
 @ConversationScoped
 public class ProfessorBean implements Serializable {
 
-	//@javax.inject.Inject ServiceDiscovery services;
+	@Inject @ConsulServices ServiceDiscovery services;
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String REST_URI = "http://192.168.25.86:8085/rest/professores";
 	public static final int HTTP_CREATED = 201;
 	public static final int HTTP_NOCONTENT = 204;
-
-	private Client client = ClientBuilder.newClient();
 
 	private Long id;
 
@@ -97,11 +96,13 @@ public class ProfessorBean implements Serializable {
 
 	public Professor findById(Long id) {
 
-		return client
-				.target(REST_URI)
+		Professor response = services
+				.getProfessorService()
 				.path(String.valueOf(id))
 				.request(MediaType.APPLICATION_JSON)
 				.get(Professor.class);
+
+		return response;
 	}
 
 
@@ -114,11 +115,12 @@ public class ProfessorBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			Response response = client
-					.target(REST_URI)
+			Response response = services
+					.getProfessorService()
 					.path(String.valueOf(id))
 					.request(MediaType.APPLICATION_JSON)
 					.put(Entity.entity(this.professor, MediaType.APPLICATION_JSON));
+
 			if(response.getStatus() == HTTP_NOCONTENT){
 				if (this.id == null)
 					return "search?faces-redirect=true";
@@ -127,7 +129,7 @@ public class ProfessorBean implements Serializable {
 			}
 			else {
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage("Ocorreu algum erro ao incluir "));
+						new FacesMessage("Ocorreu algum erro ao incluir. "));
 				return null;
 			}
 		} catch (Exception e) {
@@ -142,8 +144,8 @@ public class ProfessorBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			Response response = client
-					.target(REST_URI)
+			Response response = services
+					.getProfessorService()
 					.request(MediaType.APPLICATION_JSON)
 					.post(Entity.entity(this.professor, MediaType.APPLICATION_JSON));
 			if(response.getStatus() == HTTP_CREATED){
@@ -168,8 +170,8 @@ public class ProfessorBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			Response response = client
-					.target(REST_URI)
+			Response response = services
+					.getProfessorService()
 					.path(String.valueOf(id))
 					.request(MediaType.APPLICATION_JSON)
 					.delete();
@@ -225,9 +227,6 @@ public class ProfessorBean implements Serializable {
 
 	public void paginate() throws NamingException {
 
-		//		Topology topology = Topology.lookup();
-		//		System.out.println(topology);
-
 		HttpResourceGroup httpResourceGroup = Ribbon.createHttpResourceGroup(
 				"professor-service",
 				ClientOptions.create()
@@ -236,20 +235,21 @@ public class ProfessorBean implements Serializable {
 				);
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		HttpRequestTemplate<ByteBuf> template = httpResourceGroup.newTemplateBuilder("listAll", ByteBuf.class)
+		HttpRequestTemplate<ByteBuf> template = httpResourceGroup
+		.newTemplateBuilder("listAll", ByteBuf.class)
 		.withMethod("GET")
 		.withUriTemplate("/rest/professores")
 		.withFallbackProvider(new FallbackHandler() {
 			@Override
 			public Observable<ByteBuf> getFallback(HystrixInvokableInfo hystrixInvokableInfo, Map map) {
 				System.out.println("<< Serving fallback result list >>");
-				return Observable.just(cachedResults);
+				return Observable.just(professorCachedResults);
 			}
 		})
 		.build();
 
 		BlockingObservable<ByteBuf> obs = template.requestBuilder()
-				.withHeader("Content-Type", "application/json")
+				.withHeader("Content-Type", "application/json; charset=utf-8")
 				.withRequestProperty("start",this.page * getPageSize())
 				.withRequestProperty("max", getPageSize())
 				.build()
@@ -260,11 +260,11 @@ public class ProfessorBean implements Serializable {
 		if(responseBuffer.capacity()>0) {
 
 			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
-			cachedResults = responseBuffer;
+			professorCachedResults = responseBuffer;
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<Professor>>(){}.getType());
-			
+
 		} else {
-			String payload = cachedResults.toString(Charset.forName("UTF-8"));
+			String payload = professorCachedResults.toString(Charset.forName("UTF-8"));
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<Professor>>(){}.getType());
 		}
 
@@ -280,8 +280,8 @@ public class ProfessorBean implements Serializable {
 		Professor pr = professorService.path("1").request().get(Professor.class);
 		System.out.println(pr.getNome());
 
-		Response response =  client
-				.target(REST_URI)
+		Response response =  services
+				.getProfessorService()
 				.queryParam("start",this.page * getPageSize())
 				.queryParam("max", getPageSize())
 				.request(MediaType.APPLICATION_JSON)
@@ -309,7 +309,6 @@ public class ProfessorBean implements Serializable {
 
 		if(null==match)
 			throw new RuntimeException("Service '"+name+"' cannot be found!");
-
 
 		try {
 			URL url = new URL("http://"+match.getAddress()+":"+match.getPort());
@@ -409,5 +408,5 @@ public class ProfessorBean implements Serializable {
 		this.professor = professor;
 	}
 
-	private ByteBuf cachedResults = Unpooled.buffer();
+	private ByteBuf professorCachedResults = Unpooled.buffer();
 }

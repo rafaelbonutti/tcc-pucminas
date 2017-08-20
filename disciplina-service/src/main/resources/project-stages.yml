@@ -1,0 +1,28 @@
+service:
+  catalog:
+    service-name: disciplina-service
+logger:
+  level: DEBUG
+swarm:
+  datasources:
+    data-sources:
+      ExampleDS:
+#        driver-name: h2
+#        connection-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MV_STORE=FALSE;MVCC=FALSE
+#        user-name: sa
+#        password: sa
+        driver-name: mysql
+        connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca
+        user-name: sca
+        password: sca84354637
+  port:
+    offset: 20
+  bind:
+#    address: 172.31.11.198
+    address: 192.168.25.86
+  topology:
+    consul:
+      url: http://127.0.0.1:8500
+java:
+  net:
+      preferIPv4Stack: true

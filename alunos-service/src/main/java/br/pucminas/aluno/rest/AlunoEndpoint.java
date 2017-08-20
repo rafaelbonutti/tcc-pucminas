@@ -31,7 +31,7 @@ public class AlunoEndpoint {
 	private AlunoDao alunoDao;
 
 	@POST
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8")
 	public Response create(Aluno entity) {
 		alunoDao.create(entity);
 		return Response.created(
@@ -52,7 +52,7 @@ public class AlunoEndpoint {
 
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
-	@Produces("application/json")
+	@Produces("application/json; charset=utf-8")
 	public Response findById(@PathParam("id") Long id) {
 		Aluno entity = null;
 		try {
@@ -67,7 +67,7 @@ public class AlunoEndpoint {
 	}
 
 	@GET
-	@Produces("application/json; charset=ISO-8859-1")
+	@Produces("application/json; charset=utf-8; charset=utf-8")
 	public List<Aluno> listAll(@QueryParam("start") Integer startPosition,
 			@QueryParam("max") Integer maxResult) {
 		return alunoDao.listAll(startPosition, maxResult);
@@ -75,7 +75,7 @@ public class AlunoEndpoint {
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
-	@Consumes("application/json")
+	@Consumes("application/json; charset=utf-8")
 	public Response update(@PathParam("id") Long id, Aluno entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();

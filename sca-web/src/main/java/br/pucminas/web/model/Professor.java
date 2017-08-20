@@ -1,39 +1,15 @@
 package br.pucminas.web.model;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "TBPROFESSOR")
 public class Professor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
-
-	@Version
-	@Column(name = "version")
 	private int version;
-
-	@Column(length = 200, name = "NOME", nullable = false)
 	private String nome;
-
-	@Column(length = 11, name = "CPF")
 	private String cpf;
-
-	@Column(name = "DATANASCIMENTO")
-	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 
 	public Long getId() {
