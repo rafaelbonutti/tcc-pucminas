@@ -20,20 +20,26 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import br.pucminas.curso.model.Curso;
 
-/**
- * 
- */
+import br.pucminas.curso.model.Curso;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
+
 @Stateless
 @Path("/cursos")
+@Api(value = "/cursos", tags = "cursos")
 public class CursoEndpoint {
+	
 	@PersistenceContext(unitName = "curso-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
 	@Consumes("application/json; charset=utf-8; charset=utf-8")
-	public Response create(Curso entity) {
+	@ApiOperation(value = "Cria um Curso",
+    response = Curso.class)
+	public Response create(@ApiParam(value = "Curso a ser inserido", required = true) Curso entity) {
 		em.persist(entity);
 		return Response.created(
 				UriBuilder.fromResource(CursoEndpoint.class)
