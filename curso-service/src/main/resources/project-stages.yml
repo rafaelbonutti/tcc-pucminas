@@ -7,10 +7,6 @@ swarm:
   datasources:
     data-sources:
       ExampleDS:
-#        driver-name: h2
-#        connection-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-#        user-name: sa
-#        password: sa
         driver-name: mysql
         connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca
         user-name: sca
@@ -18,11 +14,23 @@ swarm:
   port:
     offset: 15
   bind:
-#    address: 172.31.11.198
     address: 192.168.25.86
   topology:
     consul:
       url: http://127.0.0.1:8500
 java:
   net:
-      preferIPv4Stack: true
+    preferIPv4Stack: true
+---
+project:
+  stage: production
+logger:
+  level: INFO
+swarm:
+  port:
+    offset: 15
+  bind:
+    address: 172.31.11.198
+  topology:
+    consul:
+      url: http://127.0.0.1:8500
