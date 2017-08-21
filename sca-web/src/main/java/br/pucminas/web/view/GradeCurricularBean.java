@@ -31,6 +31,7 @@ import com.netflix.ribbon.hystrix.FallbackHandler;
 
 import br.pucminas.web.consul.ConsulServices;
 import br.pucminas.web.consul.ServiceDiscovery;
+import br.pucminas.web.model.Disciplina;
 import br.pucminas.web.model.GradeCurricular;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -102,6 +103,7 @@ public class GradeCurricularBean implements Serializable {
 			this.gradeCurricular = this.example;
 		} else {
 			this.gradeCurricular = findById(getId());
+			this.gradeCurricular.setDisciplinaEntity(findDisciplinaById(gradeCurricular.getDisciplina()));
 		}
 	}
 
@@ -112,6 +114,17 @@ public class GradeCurricularBean implements Serializable {
 				.path(String.valueOf(id))
 				.request(MediaType.APPLICATION_JSON)
 				.get(GradeCurricular.class);
+
+		return response;
+	}
+	
+	public Disciplina findDisciplinaById(Long id) {
+
+		Disciplina response = services
+				.getDisciplinaService()
+				.path(String.valueOf(id))
+				.request(MediaType.APPLICATION_JSON)
+				.get(Disciplina.class);
 
 		return response;
 	}

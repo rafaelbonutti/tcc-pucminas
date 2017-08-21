@@ -66,47 +66,6 @@
 					<h:message for="cursoBeanCursoCodigo" styleClass="error"/>
 				</h:panelGroup>
 				<h:outputText/>
-				<h:outputLabel for="cursoBeanCursoCurriculo" value="Curriculo:"/>
-				<h:panelGroup>
-					<ui:param name="_collection" value="#{cursoBean.curso.curriculo}"/>
-					<h:dataTable id="cursoBeanCursoCurriculo" styleClass="data-table" value="#{forgeview:asList(_collection)}" var="_item">
-						<h:column>
-							<f:facet name="header">
-								<h:outputText value="Semestre"/>
-							</f:facet>
-							<h:link outcome="/curriculo/view">
-								<f:param name="id" value="#{_item.id}"/>
-								<h:outputText id="_itemSemestre" value="#{_item.semestre}"/>
-							</h:link>
-							<f:facet name="footer">
-								<h:inputText id="curriculoBeanAddSemestre" maxLength="1" value="#{curriculoBean.add.semestre}"/>
-								<h:message for="curriculoBeanAddSemestre" styleClass="error"/>
-							</f:facet>
-						</h:column>
-						<h:column>
-							<f:facet name="header">
-								<h:outputText value="Ano"/>
-							</f:facet>
-							<h:link outcome="/curriculo/view">
-								<f:param name="id" value="#{_item.id}"/>
-								<h:outputText id="_itemAno" value="#{_item.ano}"/>
-							</h:link>
-							<f:facet name="footer">
-								<h:inputText id="curriculoBeanAddAno" maxLength="4" value="#{curriculoBean.add.ano}"/>
-								<h:message for="curriculoBeanAddAno" styleClass="error"/>
-							</f:facet>
-						</h:column>
-						<h:column footerClass="remove-column" headerClass="remove-column">
-							<h:commandLink action="#{_collection.remove(_item)}" styleClass="remove-button"/>
-							<f:facet name="footer">
-								<h:commandLink action="#{_collection.add(curriculoBean.added)}" id="cursoBeanCursoCurriculoAdd" styleClass="add-button">
-									<f:setPropertyActionListener target="#{curriculoBean.add.curso}" value="#{cursoBean.curso}"/>
-								</h:commandLink>
-							</f:facet>
-						</h:column>
-					</h:dataTable>
-				</h:panelGroup>
-				<h:outputText/>
 			</h:panelGrid>
 
 			<div class="buttons">
