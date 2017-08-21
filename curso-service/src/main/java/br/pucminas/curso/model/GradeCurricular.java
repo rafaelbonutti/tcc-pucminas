@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -35,6 +36,9 @@ public class GradeCurricular implements Serializable {
 
 	@Column(name = "DISCIPLINA")
 	private Long disciplina;
+	
+	@Transient
+	private Disciplina disciplinaEntity;
 
 	public Long getId() {
 		return this.id;
@@ -99,6 +103,14 @@ public class GradeCurricular implements Serializable {
 		if (disciplina != null)
 			result += "disciplina: " + disciplina;
 		return result;
+	}
+
+	public Disciplina getDisciplinaEntity() {
+		return disciplinaEntity;
+	}
+
+	public void setDisciplinaEntity(Disciplina disciplinaEntity) {
+		this.disciplinaEntity = disciplinaEntity;
 	}
 
 }

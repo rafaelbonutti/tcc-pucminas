@@ -16,12 +16,16 @@ public abstract class ServiceDiscovery {
     private WebTarget cursoService;
     private WebTarget alunoService;
     private WebTarget disciplinaService;
-
+    private WebTarget curriculoService;
+    private WebTarget gradeCurricularService;
+    
     public abstract String getProfessorServiceURI();
     public abstract String getCursoServiceURI();
     public abstract String getAlunoServiceURI();
     public abstract String getDisciplinaServiceURI();
-
+    public abstract String getGradeCurricularServiceURI();
+    public abstract String getCurriculoServiceURI();
+    
     public WebTarget getProfessorService() {
         if (null == professorService) {
             professorService = ClientBuilder
@@ -76,6 +80,34 @@ public abstract class ServiceDiscovery {
         }
 
         return disciplinaService;
+    }
+    
+    public WebTarget getGradeCurricularService() {
+        if (null == gradeCurricularService) {
+        	gradeCurricularService = ClientBuilder
+                    .newClient()
+                    .target(
+                            UriBuilder.fromUri(URI.create(getGradeCurricularServiceURI()))
+                                    .path("/rest/gradescurriculares")
+                                    .build()
+                    );
+        }
+
+        return gradeCurricularService;
+    }
+    
+    public WebTarget getCurriculoService() {
+        if (null == curriculoService) {
+        	curriculoService = ClientBuilder
+                    .newClient()
+                    .target(
+                            UriBuilder.fromUri(URI.create(getGradeCurricularServiceURI()))
+                                    .path("/rest/curriculos")
+                                    .build()
+                    );
+        }
+
+        return curriculoService;
     }
 
 }

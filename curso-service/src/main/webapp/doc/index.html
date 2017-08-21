@@ -73,8 +73,14 @@
 window.onload = function() {
   
   // Build a system
+  var pathname = window.location.href;
+  var arr = pathname.split("/");
+  var url =  arr[0] + "//" + arr[2];
+  
+  //console.log(url);
+  
   const ui = SwaggerUIBundle({
-    url: "http://192.168.25.86:8095/rest/swagger.json",
+    url: url + "/rest/swagger.json",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [

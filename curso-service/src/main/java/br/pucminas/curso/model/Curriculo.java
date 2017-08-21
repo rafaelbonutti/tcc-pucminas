@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -42,7 +41,6 @@ public class Curriculo implements Serializable {
 	@Column(length = 1, name = "SEMESTRE", nullable = false)
 	private Integer semestre;
 
-	@JsonBackReference
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FKCURSO")
 	private Curso curso;
@@ -102,9 +100,13 @@ public class Curriculo implements Serializable {
 
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
+		String result = "";
+		if(curso != null)
+			result += curso.getNome().toUpperCase();
 		if (semestre != null)
-			result += "semestre: " + semestre;
+			result += " " + semestre;
+		if(ano != null)
+			result += "/" + ano.toString();		
 		return result;
 	}
 

@@ -20,20 +20,25 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import br.pucminas.curso.model.GradeCurricular;
 
-/**
- * 
- */
+import br.pucminas.curso.model.GradeCurricular;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @Stateless
 @Path("/gradescurriculares")
+@Api(value = "/gradescurriculares", tags = "gradescurriculares")
 public class GradeCurricularEndpoint {
+	
 	@PersistenceContext(unitName = "curso-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
 	@Consumes("application/json")
-	public Response create(GradeCurricular entity) {
+	@ApiOperation(value = "Cria uma Grade Curricular para um determinado Curso",
+    response = GradeCurricular.class)
+	public Response create(@ApiParam(value = "Grade Curricular a ser inserida", required = true) GradeCurricular entity) {
 		em.persist(entity);
 		return Response.created(
 				UriBuilder.fromResource(GradeCurricularEndpoint.class)

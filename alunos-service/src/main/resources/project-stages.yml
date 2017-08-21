@@ -11,6 +11,9 @@ swarm:
         connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca
         user-name: sca
         password: sca84354637
+        initial-pool-size: 3
+        max-pool-size: 10
+        idle-timeout-minutes: 30
   port:
     offset: 10
   bind:

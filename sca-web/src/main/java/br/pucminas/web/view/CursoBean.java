@@ -1,5 +1,6 @@
 package br.pucminas.web.view;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -20,6 +21,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.netflix.hystrix.HystrixInvokableInfo;
@@ -124,6 +127,9 @@ public class CursoBean implements Serializable {
 
 		this.conversation.end();
 
+		if (this.id == null)
+			return insert();
+		
 		try {
 			Response response = services
 					.getCursoService()
@@ -268,9 +274,16 @@ public class CursoBean implements Serializable {
 
 		ByteBuf responseBuffer = obs.last().copy().retain();
 		Gson gson = new Gson();
+		ObjectMapper objectMapper = new ObjectMapper();
 		if(responseBuffer.capacity()>0) {
 
 			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
+			try {
+				this.pageItems = objectMapper.readValue(payload, new TypeReference<List<Curso>>(){});
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			cursoCachedResults = responseBuffer;
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<Curso>>(){}.getType());
 
@@ -293,13 +306,11 @@ public class CursoBean implements Serializable {
 	 * HtmlSelectOneMenu)
 	 */
 
-/*	public List<Curso> getAll() {
+	public List<Curso> getAll() {
 
-		CriteriaQuery<Curso> criteria = this.entityManager.getCriteriaBuilder()
-				.createQuery(Curso.class);
-		return this.entityManager.createQuery(
-				criteria.select(criteria.from(Curso.class))).getResultList();
-	}*/
+		paginate();
+		return this.pageItems;
+	}
 
 	@Resource
 	private SessionContext sessionContext;

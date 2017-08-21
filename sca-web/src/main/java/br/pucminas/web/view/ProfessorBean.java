@@ -1,8 +1,6 @@
 package br.pucminas.web.view;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -19,16 +17,10 @@ import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.naming.NamingException;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
-import com.ecwid.consul.v1.ConsulClient;
-import com.ecwid.consul.v1.agent.model.Service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.netflix.hystrix.HystrixInvokableInfo;
@@ -113,7 +105,10 @@ public class ProfessorBean implements Serializable {
 	public String update() {
 
 		this.conversation.end();
-
+		
+		if (this.id == null)
+			return insert();
+		
 		try {
 			Response response = services
 					.getProfessorService()
@@ -268,60 +263,7 @@ public class ProfessorBean implements Serializable {
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<Professor>>(){}.getType());
 		}
 
-
-		WebTarget professorService = ClientBuilder
-				.newClient()
-				.target(
-						UriBuilder.fromUri(URI.create(discoverServiceURI("professor-service")))
-						.path("/rest/professores")
-						.build()
-						);
-
-		Professor pr = professorService.path("1").request().get(Professor.class);
-		System.out.println(pr.getNome());
-
-		Response response =  services
-				.getProfessorService()
-				.queryParam("start",this.page * getPageSize())
-				.queryParam("max", getPageSize())
-				.request(MediaType.APPLICATION_JSON)
-				.get(Response.class);
-
-		this.pageItems = response.readEntity(new GenericType<List<Professor>>() {
-		});
-
-		this.count = Long.valueOf(response.getHeaderString("total"));
-	}
-
-	public String discoverServiceURI(String name) {
-
-		ConsulClient client = getConsulClient();
-		Map<String, Service> agentServices = client.getAgentServices().getValue();
-
-		Service match = null;
-
-		for (Map.Entry<String, Service> entry : agentServices.entrySet()) {
-			if(entry.getValue().getService().equals(name)) {
-				match = entry.getValue();
-				break;
-			}
-		}
-
-		if(null==match)
-			throw new RuntimeException("Service '"+name+"' cannot be found!");
-
-		try {
-			URL url = new URL("http://"+match.getAddress()+":"+match.getPort());
-			return url.toExternalForm();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private ConsulClient getConsulClient() {
-		String consulHost = System.getProperty("consul.host", "127.0.0.1"); // DOCKER
-		ConsulClient client = new ConsulClient(consulHost);
-		return client;
+		//this.count = Long.valueOf(response.getHeaderString("total"));
 	}
 
 	public List<Professor> getPageItems() {

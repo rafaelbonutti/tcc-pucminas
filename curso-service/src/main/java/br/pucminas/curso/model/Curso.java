@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "TBCURSO")
@@ -50,7 +50,7 @@ public class Curso implements Serializable {
 	@Column(name = "MODALIDADE", length = 1)
 	private Modalidade modalidade;
 
-	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(targetEntity = Curriculo.class, mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Curriculo> curriculo = new HashSet<Curriculo>();
 

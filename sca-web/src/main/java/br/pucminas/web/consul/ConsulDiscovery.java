@@ -20,6 +20,16 @@ public class ConsulDiscovery extends ServiceDiscovery {
     public String getCursoServiceURI() {
         return services.discoverServiceURI("curso-service");
     }
+    
+	@Override
+	public String getGradeCurricularServiceURI() {
+		return services.discoverServiceURI("curso-service");
+	}
+
+	@Override
+	public String getCurriculoServiceURI() {
+		return services.discoverServiceURI("curso-service");
+	}
 
     @Override
     public String getAlunoServiceURI() {
@@ -30,4 +40,5 @@ public class ConsulDiscovery extends ServiceDiscovery {
     public String getDisciplinaServiceURI() {
         return services.discoverServiceURI("disciplina-service");
     }
+
 }

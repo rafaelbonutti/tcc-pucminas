@@ -17,18 +17,18 @@
 		Curso
 	</ui:define>
 
-	<ui:define name="subheader">
+<!-- 	<ui:define name="subheader">
 		Search Curso entities
-	</ui:define>
+	</ui:define> -->
 
 	<ui:define name="footer"/>
 
 	<ui:define name="main">
 		<h:form id="search">
 			<f:validateBean disabled="true">
-				<h:panelGroup styleClass="search">
+				<h:panelGroup styleClass="container">
 
-					<h:panelGrid columnClasses="label,component,required" columns="3">
+<!-- 					<h:panelGrid columnClasses="label,component,required" columns="3">
 						<h:outputLabel for="cursoBeanExampleNome" value="Nome:"/>
 						<h:panelGroup>
 							<h:inputText id="cursoBeanExampleNome" maxLength="100" value="#{cursoBean.example.nome}"/>
@@ -58,7 +58,7 @@
 							<h:message for="cursoBeanExampleCodigo" styleClass="error"/>
 						</h:panelGroup>
 						<h:outputText/>
-					</h:panelGrid>
+					</h:panelGrid> -->
 					<h:panelGroup styleClass="buttons">
 						<h:commandLink value="Search" action='#{cursoBean.search}' styleClass="btn btn-primary"/>
 						<h:commandLink value="Create New" action='#{cursoBean.create}' styleClass="btn btn-primary"/>

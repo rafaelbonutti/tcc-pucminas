@@ -386,7 +386,7 @@ footer p {
 
 #content .buttons {
 	display: block;
-	text-align: center;
+	text-align: right;
 	margin-top: 25px;
 	margin-bottom: 10px;
 }

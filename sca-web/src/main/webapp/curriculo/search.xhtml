@@ -18,18 +18,18 @@
 		Curriculo
 	</ui:define>
 
-	<ui:define name="subheader">
+	<!-- 	<ui:define name="subheader">
 		Search Curriculo entities
-	</ui:define>
+	</ui:define> -->
 
 	<ui:define name="footer" />
 
 	<ui:define name="main">
 		<h:form id="search">
 			<f:validateBean disabled="true">
-				<h:panelGroup styleClass="search">
+				<h:panelGroup styleClass="container">
 
-					<h:panelGrid columnClasses="label,component,required" columns="3">
+<!-- 					<h:panelGrid columnClasses="label,component,required" columns="3">
 						<h:outputLabel for="curriculoBeanExampleSemestre"
 							value="Semestre:" />
 						<h:panelGroup>
@@ -57,7 +57,7 @@
 							<h:message for="curriculoBeanExampleCurso" styleClass="error" />
 						</h:panelGroup>
 						<h:outputText />
-					</h:panelGrid>
+					</h:panelGrid> -->
 					<h:panelGroup styleClass="buttons">
 						<h:commandLink value="Search" action='#{curriculoBean.search}'
 							styleClass="btn btn-primary" />

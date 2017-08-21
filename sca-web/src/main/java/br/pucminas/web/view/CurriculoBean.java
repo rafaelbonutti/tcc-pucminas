@@ -1,8 +1,9 @@
 package br.pucminas.web.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -15,17 +16,26 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.netflix.hystrix.HystrixInvokableInfo;
+import com.netflix.ribbon.ClientOptions;
+import com.netflix.ribbon.Ribbon;
+import com.netflix.ribbon.http.HttpRequestTemplate;
+import com.netflix.ribbon.http.HttpResourceGroup;
+import com.netflix.ribbon.hystrix.FallbackHandler;
+
+import br.pucminas.web.consul.ConsulServices;
+import br.pucminas.web.consul.ServiceDiscovery;
 import br.pucminas.web.model.Curriculo;
-import br.pucminas.web.model.Curso;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import rx.Observable;
+import rx.observables.BlockingObservable;
 
 /**
  * Backing bean for Curriculo entities.
@@ -42,7 +52,12 @@ import br.pucminas.web.model.Curso;
 @ConversationScoped
 public class CurriculoBean implements Serializable {
 
+	@Inject @ConsulServices ServiceDiscovery services;
+
 	private static final long serialVersionUID = 1L;
+
+	public static final int HTTP_CREATED = 201;
+	public static final int HTTP_NOCONTENT = 204;
 
 	/*
 	 * Support creating and retrieving Curriculo entities
@@ -70,9 +85,7 @@ public class CurriculoBean implements Serializable {
 
 	@Inject
 	private Conversation conversation;
-
-	@PersistenceContext(unitName = "curso-service-persistence-unit", type = PersistenceContextType.EXTENDED)
-	private EntityManager entityManager;
+	@Inject CursoBean cursoBean;
 
 	public String create() {
 
@@ -101,7 +114,13 @@ public class CurriculoBean implements Serializable {
 
 	public Curriculo findById(Long id) {
 
-		return this.entityManager.find(Curriculo.class, id);
+		Curriculo response = services
+				.getCurriculoService()
+				.path(String.valueOf(id))
+				.request(MediaType.APPLICATION_JSON)
+				.get(Curriculo.class);
+
+		return response;
 	}
 
 	/*
@@ -109,15 +128,56 @@ public class CurriculoBean implements Serializable {
 	 */
 
 	public String update() {
+
+		this.conversation.end();
+		
+		if (this.id == null)
+			return insert();
+		
+		try {
+			Response response = services
+					.getCurriculoService()
+					.path(String.valueOf(id))
+					.request(MediaType.APPLICATION_JSON)
+					.put(Entity.entity(this.curriculo, MediaType.APPLICATION_JSON));
+
+			if(response.getStatus() == HTTP_NOCONTENT){
+				if (this.id == null)
+					return "search?faces-redirect=true";
+				else
+					return "view?faces-redirect=true&id=" + this.curriculo.getId();
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao incluir. "));
+				return null;
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(e.getMessage()));
+			return null;
+		}
+	}
+
+	public String insert() {
+
 		this.conversation.end();
 
 		try {
-			if (this.id == null) {
-				this.entityManager.persist(this.curriculo);
-				return "search?faces-redirect=true";
-			} else {
-				this.entityManager.merge(this.curriculo);
-				return "view?faces-redirect=true&id=" + this.curriculo.getId();
+			Response response = services
+					.getCurriculoService()
+					.request(MediaType.APPLICATION_JSON)
+					.post(Entity.entity(this.curriculo, MediaType.APPLICATION_JSON));
+			if(response.getStatus() == HTTP_CREATED){
+				if (this.id == null)
+					return "search?faces-redirect=true";
+				else
+					return "view?faces-redirect=true&id=" + this.curriculo.getId();
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao incluir "));
+				return null;
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -130,14 +190,20 @@ public class CurriculoBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			Curriculo deletableEntity = findById(getId());
-			Curso curso = deletableEntity.getCurso();
-			curso.getCurriculo().remove(deletableEntity);
-			deletableEntity.setCurso(null);
-			this.entityManager.merge(curso);
-			this.entityManager.remove(deletableEntity);
-			this.entityManager.flush();
-			return "search?faces-redirect=true";
+			Response response = services
+					.getCurriculoService()
+					.path(String.valueOf(id))
+					.request(MediaType.APPLICATION_JSON)
+					.delete();
+
+			if(response.getStatus() == HTTP_NOCONTENT){
+				return "search?faces-redirect=true";
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao deletar " + String.valueOf(id)));
+				return null;
+			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(e.getMessage()));
@@ -182,48 +248,51 @@ public class CurriculoBean implements Serializable {
 
 	public void paginate() {
 
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+		HttpResourceGroup httpResourceGroup = Ribbon.createHttpResourceGroup(
+				"curso-service",
+				ClientOptions.create()
+				.withMaxAutoRetriesNextServer(3)
+				.withLoadBalancerEnabled(true)
+				);
 
-		// Populate this.count
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		HttpRequestTemplate<ByteBuf> template = httpResourceGroup
+		.newTemplateBuilder("listAll", ByteBuf.class)
+		.withMethod("GET")
+		.withUriTemplate("/rest/curriculos")
+		.withFallbackProvider(new FallbackHandler() {
+			@Override
+			public Observable<ByteBuf> getFallback(HystrixInvokableInfo hystrixInvokableInfo, Map map) {
+				System.out.println("<< Serving fallback result list >>");
+				return Observable.just(curriculoCachedResults);
+			}
+		})
+		.build();
 
-		CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-		Root<Curriculo> root = countCriteria.from(Curriculo.class);
-		countCriteria = countCriteria.select(builder.count(root)).where(
-				getSearchPredicates(root));
-		this.count = this.entityManager.createQuery(countCriteria)
-				.getSingleResult();
+		BlockingObservable<ByteBuf> obs = template.requestBuilder()
+				.withHeader("Content-Type", "application/json; charset=utf-8")
+				.withRequestProperty("start",this.page * getPageSize())
+				.withRequestProperty("max", getPageSize())
+				.build()
+				.observe().toBlocking();
 
-		// Populate this.pageItems
+		ByteBuf responseBuffer = obs.last().copy().retain();
+		Gson gson = new Gson();
+		if(responseBuffer.capacity()>0) {
 
-		CriteriaQuery<Curriculo> criteria = builder
-				.createQuery(Curriculo.class);
-		root = criteria.from(Curriculo.class);
-		TypedQuery<Curriculo> query = this.entityManager.createQuery(criteria
-				.select(root).where(getSearchPredicates(root)));
-		query.setFirstResult(this.page * getPageSize()).setMaxResults(
-				getPageSize());
-		this.pageItems = query.getResultList();
-	}
+			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
+			curriculoCachedResults = responseBuffer;
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<Curriculo>>(){}.getType());
 
-	private Predicate[] getSearchPredicates(Root<Curriculo> root) {
-
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-		List<Predicate> predicatesList = new ArrayList<Predicate>();
-
-		Integer semestre = this.example.getSemestre();
-		if (semestre != null && semestre.intValue() != 0) {
-			predicatesList.add(builder.equal(root.get("semestre"), semestre));
+		} else {
+			String payload = curriculoCachedResults.toString(Charset.forName("UTF-8"));
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<Curriculo>>(){}.getType());
 		}
-		Integer ano = this.example.getAno();
-		if (ano != null && ano.intValue() != 0) {
-			predicatesList.add(builder.equal(root.get("ano"), ano));
-		}
-		Curso curso = this.example.getCurso();
-		if (curso != null) {
-			predicatesList.add(builder.equal(root.get("curso"), curso));
-		}
-
-		return predicatesList.toArray(new Predicate[predicatesList.size()]);
+		
+		//TODO - cursos
+		//for(Curriculo c : pageItems){
+		//	c.setCurso(cursoBean.findById());
+		//}
 	}
 
 	public List<Curriculo> getPageItems() {
@@ -241,11 +310,8 @@ public class CurriculoBean implements Serializable {
 
 	public List<Curriculo> getAll() {
 
-		CriteriaQuery<Curriculo> criteria = this.entityManager
-				.getCriteriaBuilder().createQuery(Curriculo.class);
-		return this.entityManager.createQuery(
-				criteria.select(criteria.from(Curriculo.class)))
-				.getResultList();
+		paginate();
+		return this.pageItems;
 	}
 
 	@Resource
@@ -293,4 +359,6 @@ public class CurriculoBean implements Serializable {
 		this.add = new Curriculo();
 		return added;
 	}
+	
+	private ByteBuf curriculoCachedResults = Unpooled.buffer();
 }

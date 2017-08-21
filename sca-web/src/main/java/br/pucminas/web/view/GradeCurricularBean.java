@@ -1,8 +1,7 @@
 package br.pucminas.web.view;
 
 import java.io.Serializable;
-import java.net.URL;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -17,29 +16,29 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import com.ecwid.consul.v1.ConsulClient;
-import com.ecwid.consul.v1.agent.model.Service;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.netflix.hystrix.HystrixInvokableInfo;
+import com.netflix.ribbon.ClientOptions;
+import com.netflix.ribbon.Ribbon;
+import com.netflix.ribbon.http.HttpRequestTemplate;
+import com.netflix.ribbon.http.HttpResourceGroup;
+import com.netflix.ribbon.hystrix.FallbackHandler;
 
-import br.pucminas.web.model.Curriculo;
+import br.pucminas.web.consul.ConsulServices;
+import br.pucminas.web.consul.ServiceDiscovery;
 import br.pucminas.web.model.GradeCurricular;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import rx.Observable;
+import rx.observables.BlockingObservable;
 
 /**
  * Backing bean for GradeCurricular entities.
- * <p/>
- * This class provides CRUD functionality for all GradeCurricular entities. It
- * focuses purely on Java EE 6 standards (e.g. <tt>&#64;ConversationScoped</tt>
- * for state management, <tt>PersistenceContext</tt> for persistence,
- * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD
- * framework or custom base class.
  */
 
 @Named
@@ -47,7 +46,12 @@ import br.pucminas.web.model.GradeCurricular;
 @ConversationScoped
 public class GradeCurricularBean implements Serializable {
 
+	@Inject @ConsulServices ServiceDiscovery services;
+
 	private static final long serialVersionUID = 1L;
+
+	public static final int HTTP_CREATED = 201;
+	public static final int HTTP_NOCONTENT = 204;
 
 	/*
 	 * Support creating and retrieving GradeCurricular entities
@@ -76,9 +80,6 @@ public class GradeCurricularBean implements Serializable {
 	@Inject
 	private Conversation conversation;
 
-	@PersistenceContext(unitName = "curso-service-persistence-unit", type = PersistenceContextType.EXTENDED)
-	private EntityManager entityManager;
-
 	public String create() {
 
 		this.conversation.begin();
@@ -106,7 +107,13 @@ public class GradeCurricularBean implements Serializable {
 
 	public GradeCurricular findById(Long id) {
 
-		return this.entityManager.find(GradeCurricular.class, id);
+		GradeCurricular response = services
+				.getGradeCurricularService()
+				.path(String.valueOf(id))
+				.request(MediaType.APPLICATION_JSON)
+				.get(GradeCurricular.class);
+
+		return response;
 	}
 
 	/*
@@ -115,15 +122,54 @@ public class GradeCurricularBean implements Serializable {
 
 	public String update() {
 		this.conversation.end();
+		
+		if (this.id == null)
+			return insert();
 
 		try {
-			if (this.id == null) {
-				this.entityManager.persist(this.gradeCurricular);
-				return "search?faces-redirect=true";
-			} else {
-				this.entityManager.merge(this.gradeCurricular);
-				return "view?faces-redirect=true&id="
-						+ this.gradeCurricular.getId();
+			Response response = services
+					.getGradeCurricularService()
+					.path(String.valueOf(id))
+					.request(MediaType.APPLICATION_JSON)
+					.put(Entity.entity(this.gradeCurricular, MediaType.APPLICATION_JSON));
+
+			if(response.getStatus() == HTTP_NOCONTENT){
+				if (this.id == null)
+					return "search?faces-redirect=true";
+				else
+					return "view?faces-redirect=true&id=" + this.gradeCurricular.getId();
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao incluir. "));
+				return null;
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(e.getMessage()));
+			return null;
+		}
+	}
+
+	public String insert() {
+
+		this.conversation.end();
+
+		try {
+			Response response = services
+					.getGradeCurricularService()
+					.request(MediaType.APPLICATION_JSON)
+					.post(Entity.entity(this.gradeCurricular, MediaType.APPLICATION_JSON));
+			if(response.getStatus() == HTTP_CREATED){
+				if (this.id == null)
+					return "search?faces-redirect=true";
+				else
+					return "view?faces-redirect=true&id=" + this.gradeCurricular.getId();
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao incluir "));
+				return null;
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -136,14 +182,20 @@ public class GradeCurricularBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			GradeCurricular deletableEntity = findById(getId());
-			Curriculo curriculo = deletableEntity.getCurriculo();
-			curriculo.getGradeCurricular().remove(deletableEntity);
-			deletableEntity.setCurriculo(null);
-			this.entityManager.merge(curriculo);
-			this.entityManager.remove(deletableEntity);
-			this.entityManager.flush();
-			return "search?faces-redirect=true";
+			Response response = services
+					.getGradeCurricularService()
+					.path(String.valueOf(id))
+					.request(MediaType.APPLICATION_JSON)
+					.delete();
+
+			if(response.getStatus() == HTTP_NOCONTENT){
+				return "search?faces-redirect=true";
+			}
+			else {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Ocorreu algum erro ao deletar " + String.valueOf(id)));
+				return null;
+			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(e.getMessage()));
@@ -188,46 +240,46 @@ public class GradeCurricularBean implements Serializable {
 
 	public void paginate() {
 
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+		HttpResourceGroup httpResourceGroup = Ribbon.createHttpResourceGroup(
+				"curso-service",
+				ClientOptions.create()
+				.withMaxAutoRetriesNextServer(3)
+				.withLoadBalancerEnabled(true)
+				);
 
-		// Populate this.count
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		HttpRequestTemplate<ByteBuf> template = httpResourceGroup
+		.newTemplateBuilder("listAll", ByteBuf.class)
+		.withMethod("GET")
+		.withUriTemplate("/rest/gradescurriculares")
+		.withFallbackProvider(new FallbackHandler() {
+			@Override
+			public Observable<ByteBuf> getFallback(HystrixInvokableInfo hystrixInvokableInfo, Map map) {
+				System.out.println("<< Serving fallback result list >>");
+				return Observable.just(gradesCachedResults);
+			}
+		})
+		.build();
 
-		CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-		Root<GradeCurricular> root = countCriteria.from(GradeCurricular.class);
-		countCriteria = countCriteria.select(builder.count(root)).where(
-				getSearchPredicates(root));
-		this.count = this.entityManager.createQuery(countCriteria)
-				.getSingleResult();
+		BlockingObservable<ByteBuf> obs = template.requestBuilder()
+				.withHeader("Content-Type", "application/json; charset=utf-8")
+				.withRequestProperty("start",this.page * getPageSize())
+				.withRequestProperty("max", getPageSize())
+				.build()
+				.observe().toBlocking();
 
-		// Populate this.pageItems
+		ByteBuf responseBuffer = obs.last().copy().retain();
+		Gson gson = new Gson();
+		if(responseBuffer.capacity()>0) {
 
-		CriteriaQuery<GradeCurricular> criteria = builder
-				.createQuery(GradeCurricular.class);
-		root = criteria.from(GradeCurricular.class);
-		TypedQuery<GradeCurricular> query = this.entityManager
-				.createQuery(criteria.select(root).where(
-						getSearchPredicates(root)));
-		query.setFirstResult(this.page * getPageSize()).setMaxResults(
-				getPageSize());
-		this.pageItems = query.getResultList();
-	}
+			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
+			gradesCachedResults = responseBuffer;
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
 
-	private Predicate[] getSearchPredicates(Root<GradeCurricular> root) {
-
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-		List<Predicate> predicatesList = new ArrayList<Predicate>();
-
-		Curriculo curriculo = this.example.getCurriculo();
-		if (curriculo != null) {
-			predicatesList.add(builder.equal(root.get("curriculo"), curriculo));
+		} else {
+			String payload = gradesCachedResults.toString(Charset.forName("UTF-8"));
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
 		}
-		Long disciplina = this.example.getDisciplina();
-		if (disciplina != null && disciplina.intValue() != 0) {
-			predicatesList
-					.add(builder.equal(root.get("disciplina"), disciplina));
-		}
-
-		return predicatesList.toArray(new Predicate[predicatesList.size()]);
 	}
 
 	public List<GradeCurricular> getPageItems() {
@@ -237,51 +289,20 @@ public class GradeCurricularBean implements Serializable {
 	public long getCount() {
 		return this.count;
 	}
-	
-	public String discoverServiceURI(String name) {
-
-		ConsulClient client = getConsulClient();
-		Map<String, Service> agentServices = client.getAgentServices().getValue();
-
-		Service match = null;
-
-		for (Map.Entry<String, Service> entry : agentServices.entrySet()) {
-			if(entry.getValue().getService().equals(name)) {
-				match = entry.getValue();
-				break;
-			}
-		}
-
-		if(null==match)
-			throw new RuntimeException("Service '"+name+"' cannot be found!");
-		
-		try {
-			URL url = new URL("http://"+match.getAddress()+":"+match.getPort());
-			return url.toExternalForm();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private ConsulClient getConsulClient() {
-		String consulHost = System.getProperty("consul.host", "127.0.0.1"); // DOCKER
-		ConsulClient client = new ConsulClient(consulHost);
-		return client;
-	}
 
 	/*
 	 * Support listing and POSTing back GradeCurricular entities (e.g. from
 	 * inside an HtmlSelectOneMenu)
 	 */
 
-	public List<GradeCurricular> getAll() {
+/*	public List<GradeCurricular> getAll() {
 
 		CriteriaQuery<GradeCurricular> criteria = this.entityManager
 				.getCriteriaBuilder().createQuery(GradeCurricular.class);
 		return this.entityManager.createQuery(
 				criteria.select(criteria.from(GradeCurricular.class)))
 				.getResultList();
-	}
+	}*/
 
 	@Resource
 	private SessionContext sessionContext;
@@ -328,4 +349,6 @@ public class GradeCurricularBean implements Serializable {
 		this.add = new GradeCurricular();
 		return added;
 	}
+	
+	private ByteBuf gradesCachedResults = Unpooled.buffer();
 }

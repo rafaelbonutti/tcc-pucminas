@@ -9,7 +9,8 @@ public class GradeCurricular implements Serializable {
 	private int version;
 	private Curriculo curriculo;
 	private Long disciplina;
-
+	private Disciplina disciplinaEntity;
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -73,6 +74,14 @@ public class GradeCurricular implements Serializable {
 		if (disciplina != null)
 			result += "disciplina: " + disciplina;
 		return result;
+	}
+
+	public Disciplina getDisciplinaEntity() {
+		return disciplinaEntity;
+	}
+
+	public void setDisciplinaEntity(Disciplina disciplinaEntity) {
+		this.disciplinaEntity = disciplinaEntity;
 	}
 
 }
