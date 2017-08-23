@@ -9,11 +9,12 @@
 	template="/resources/scaffold/pageTemplate.xhtml">
 
 	<f:metadata>
-		<f:viewParam name="id" value='#{gradeCurricularBean.id}'/>
-		<f:event type="preRenderView" listener='#{gradeCurricularBean.retrieve}'/>
+		<f:viewParam name="id" value='#{gradeCurricularBean.id}' />
+		<f:event type="preRenderView"
+			listener='#{gradeCurricularBean.retrieve}' />
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="Create Grade Curricular"/>
+	<ui:param name="pageTitle" value="Create Grade Curricular" />
 
 	<ui:define name="header">
 		Grade Curricular
@@ -30,41 +31,59 @@
 		</c:choose>
 	</ui:define>
 
-	<ui:define name="footer"/>
+	<ui:define name="footer" />
 
 	<ui:define name="main">
 		<h:form id="create">
-			<h:messages globalOnly="true" styleClass="error"/>
+			<h:messages globalOnly="true" styleClass="error" />
 
 			<h:panelGrid columnClasses="label,component,required" columns="3">
-				<h:outputLabel for="gradeCurricularBeanGradeCurricularCurriculo" value="Curriculo:"/>
+				<h:outputLabel for="gradeCurricularBeanGradeCurricularCurriculo"
+					value="Curriculo:" />
 				<h:panelGroup>
-					<h:selectOneMenu converter="#{curriculoBean.converter}" id="gradeCurricularBeanGradeCurricularCurriculo" value="#{gradeCurricularBean.gradeCurricular.curriculo}">
-						<f:selectItem/>
-						<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{curriculoBean.all}" var="_item"/>
+					<h:selectOneMenu converter="#{curriculoBean.converter}"
+						id="gradeCurricularBeanGradeCurricularCurriculo"
+						value="#{gradeCurricularBean.gradeCurricular.curriculo}">
+						<f:selectItem />
+						<f:selectItems itemLabel="#{forgeview:display(_item)}"
+							itemValue="#{_item}" value="#{curriculoBean.all}" var="_item" />
 					</h:selectOneMenu>
-					<h:message for="gradeCurricularBeanGradeCurricularCurriculo" styleClass="error"/>
+					<h:message for="gradeCurricularBeanGradeCurricularCurriculo"
+						styleClass="error" />
 				</h:panelGroup>
-				<h:outputText/>
-				<h:outputLabel for="gradeCurricularBeanGradeCurricularDisciplina" value="Disciplina:"/>
+				<h:outputText />
+				<h:outputLabel for="gradeCurricularBeanGradeCurricularDisciplina"
+					value="Disciplina:" />
 				<h:panelGroup>
-					<h:inputText id="gradeCurricularBeanGradeCurricularDisciplina" value="#{gradeCurricularBean.gradeCurricular.disciplina}"/>
-					<h:message for="gradeCurricularBeanGradeCurricularDisciplina" styleClass="error"/>
+					<h:selectOneMenu 
+						id="gradeCurricularBeanGradeCurricularDisciplina"
+						value="#{gradeCurricularBean.gradeCurricular.disciplina}">
+						<f:selectItem />
+						<f:selectItems itemLabel="#{forgeview:display(d)}"
+							itemValue="#{d.id}" value="#{disciplinaBean.all}"  var="d">
+							<h:message for="gradeCurricularBeanGradeCurricularDisciplina"
+								styleClass="error" />
+						</f:selectItems>
+					</h:selectOneMenu>
 				</h:panelGroup>
-				<h:outputText/>
+				<h:outputText />
 			</h:panelGrid>
 
 			<div class="buttons">
-				<h:commandLink value="Save" action='#{gradeCurricularBean.update}' styleClass="btn btn-primary"/>
+				<h:commandLink value="Save" action='#{gradeCurricularBean.update}'
+					styleClass="btn btn-primary" />
 				<c:choose>
 					<c:when test='#{!empty gradeCurricularBean.id}'>
 						<h:link value="Cancel" outcome="view" styleClass="btn btn-primary">
-							<f:param name="id" value='#{gradeCurricularBean.id}'/>
+							<f:param name="id" value='#{gradeCurricularBean.id}' />
 						</h:link>
-						<h:commandLink value="Delete" action='#{gradeCurricularBean.delete}' styleClass="btn btn-primary"/>
+						<h:commandLink value="Delete"
+							action='#{gradeCurricularBean.delete}'
+							styleClass="btn btn-primary" />
 					</c:when>
 					<c:otherwise>
-						<h:link value="Cancel" outcome="search" styleClass="btn btn-primary"/>
+						<h:link value="Cancel" outcome="search"
+							styleClass="btn btn-primary" />
 					</c:otherwise>
 				</c:choose>
 			</div>

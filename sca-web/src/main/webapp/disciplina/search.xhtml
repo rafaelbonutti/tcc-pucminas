@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="page" value='#{disciplinaBean.page}' />
+		<f:event type="preRenderView" listener='#{disciplinaBean.paginate}' />
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="Search Disciplina entities" />
+
+	<ui:define name="header">
+		Disciplina
+	</ui:define>
+
+	<ui:define name="main">
+		<b:container fluid="true">
+			<h:form id="search">
+
+				<b:commandButton value="Novo" icon="plus-sign"
+					action="#{disciplinaBean.create}" look="primary" />
+
+				<b:dataTable id="disciplinaBeanPageItems" styleClass="data-table"
+					custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+					value="#{disciplinaBean.pageItems}" var="_item">
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Codigo" />
+						</f:facet>
+						<h:link outcome="/disciplina/view">
+							<f:param name="id" value="#{_item.id}" />
+							<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
+						</h:link>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Nome" />
+						</f:facet>
+						<h:link outcome="/disciplina/view">
+							<f:param name="id" value="#{_item.id}" />
+							<h:outputText id="_itemNome" value="#{_item.nome}" />
+						</h:link>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Creditos" />
+						</f:facet>
+						<h:link outcome="/disciplina/view">
+							<f:param name="id" value="#{_item.id}" />
+							<h:outputText id="_itemCreditos" value="#{_item.creditos}" />
+						</h:link>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Carga Horaria" />
+						</f:facet>
+						<h:link outcome="/disciplina/view">
+							<f:param name="id" value="#{_item.id}" />
+							<h:outputText id="_itemCargaHoraria"
+								value="#{_item.cargaHoraria}" />
+						</h:link>
+					</h:column>
+				</b:dataTable>
+			</h:form>
+		</b:container>
+	</ui:define>
+</ui:composition>

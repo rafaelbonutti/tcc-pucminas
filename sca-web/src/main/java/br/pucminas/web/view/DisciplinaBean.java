@@ -2,7 +2,6 @@ package br.pucminas.web.view;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -33,20 +35,19 @@ import com.netflix.ribbon.hystrix.FallbackHandler;
 import br.pucminas.web.consul.ConsulServices;
 import br.pucminas.web.consul.ServiceDiscovery;
 import br.pucminas.web.model.Disciplina;
-import br.pucminas.web.model.GradeCurricular;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import rx.Observable;
 import rx.observables.BlockingObservable;
 
 /**
- * Backing bean for GradeCurricular entities.
+ * Backing bean for Disciplina entities.
  */
 
 @Named
 @Stateful
 @ConversationScoped
-public class GradeCurricularBean implements Serializable {
+public class DisciplinaBean implements Serializable {
 
 	@Inject @ConsulServices ServiceDiscovery services;
 
@@ -56,7 +57,7 @@ public class GradeCurricularBean implements Serializable {
 	public static final int HTTP_NOCONTENT = 204;
 
 	/*
-	 * Support creating and retrieving GradeCurricular entities
+	 * Support creating and retrieving Disciplina entities
 	 */
 
 	private Long id;
@@ -69,18 +70,21 @@ public class GradeCurricularBean implements Serializable {
 		this.id = id;
 	}
 
-	private GradeCurricular gradeCurricular;
+	private Disciplina disciplina;
 
-	public GradeCurricular getGradeCurricular() {
-		return this.gradeCurricular;
+	public Disciplina getDisciplina() {
+		return this.disciplina;
 	}
 
-	public void setGradeCurricular(GradeCurricular gradeCurricular) {
-		this.gradeCurricular = gradeCurricular;
+	public void setDisciplina(Disciplina disciplina) {
+		this.disciplina = disciplina;
 	}
 
 	@Inject
 	private Conversation conversation;
+
+	@PersistenceContext(unitName = "disciplina-service-persistence-unit", type = PersistenceContextType.EXTENDED)
+	private EntityManager entityManager;
 
 	public String create() {
 
@@ -88,9 +92,6 @@ public class GradeCurricularBean implements Serializable {
 		this.conversation.setTimeout(1800000L);
 		return "create?faces-redirect=true";
 	}
-	
-	List<Disciplina> disciplinas = new ArrayList<Disciplina>();
-	@Inject DisciplinaBean disciplinaBean;
 
 	public void retrieve() {
 
@@ -104,48 +105,46 @@ public class GradeCurricularBean implements Serializable {
 		}
 
 		if (this.id == null) {
-			this.gradeCurricular = this.example;
-			this.disciplinas = disciplinaBean.getAll();
+			this.disciplina = this.example;
 		} else {
-			this.gradeCurricular = findById(getId());
-			this.gradeCurricular.setDisciplinaEntity(disciplinaBean.findById(gradeCurricular.getDisciplina()));
+			this.disciplina = findById(getId());
 		}
 	}
 
-	public GradeCurricular findById(Long id) {
+	public Disciplina findById(Long id) {
 
-		GradeCurricular response = services
-				.getGradeCurricularService()
+		Disciplina response = services
+				.getDisciplinaService()
 				.path(String.valueOf(id))
 				.request(MediaType.APPLICATION_JSON)
-				.get(GradeCurricular.class);
+				.get(Disciplina.class);
 
 		return response;
 	}
-	
+
 	/*
-	 * Support updating and deleting GradeCurricular entities
+	 * Support updating and deleting Disciplina entities
 	 */
 
 	public String update() {
 
+		this.conversation.end();
+
 		if (this.id == null)
 			return insert();
 		
-		this.conversation.end();
-
 		try {
 			Response response = services
-					.getGradeCurricularService()
+					.getDisciplinaService()
 					.path(String.valueOf(id))
 					.request(MediaType.APPLICATION_JSON)
-					.put(Entity.entity(this.gradeCurricular, MediaType.APPLICATION_JSON));
+					.put(Entity.entity(this.disciplina, MediaType.APPLICATION_JSON));
 
 			if(response.getStatus() == HTTP_NOCONTENT){
 				if (this.id == null)
 					return "search?faces-redirect=true";
 				else
-					return "view?faces-redirect=true&id=" + this.gradeCurricular.getId();
+					return "view?faces-redirect=true&id=" + this.disciplina.getId();
 			}
 			else {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -165,14 +164,14 @@ public class GradeCurricularBean implements Serializable {
 
 		try {
 			Response response = services
-					.getGradeCurricularService()
+					.getDisciplinaService()
 					.request(MediaType.APPLICATION_JSON)
-					.post(Entity.entity(this.gradeCurricular, MediaType.APPLICATION_JSON));
+					.post(Entity.entity(this.disciplina, MediaType.APPLICATION_JSON));
 			if(response.getStatus() == HTTP_CREATED){
 				if (this.id == null)
 					return "search?faces-redirect=true";
 				else
-					return "view?faces-redirect=true&id=" + this.gradeCurricular.getId();
+					return "view?faces-redirect=true&id=" + this.disciplina.getId();
 			}
 			else {
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -191,7 +190,7 @@ public class GradeCurricularBean implements Serializable {
 
 		try {
 			Response response = services
-					.getGradeCurricularService()
+					.getDisciplinaService()
 					.path(String.valueOf(id))
 					.request(MediaType.APPLICATION_JSON)
 					.delete();
@@ -212,14 +211,14 @@ public class GradeCurricularBean implements Serializable {
 	}
 
 	/*
-	 * Support searching GradeCurricular entities with pagination
+	 * Support searching Disciplina entities with pagination
 	 */
 
 	private int page;
 	private long count;
-	private List<GradeCurricular> pageItems;
+	private List<Disciplina> pageItems;
 
-	private GradeCurricular example = new GradeCurricular();
+	private Disciplina example = new Disciplina();
 
 	public int getPage() {
 		return this.page;
@@ -233,11 +232,11 @@ public class GradeCurricularBean implements Serializable {
 		return 10;
 	}
 
-	public GradeCurricular getExample() {
+	public Disciplina getExample() {
 		return this.example;
 	}
 
-	public void setExample(GradeCurricular example) {
+	public void setExample(Disciplina example) {
 		this.example = example;
 	}
 
@@ -249,7 +248,7 @@ public class GradeCurricularBean implements Serializable {
 	public void paginate() {
 
 		HttpResourceGroup httpResourceGroup = Ribbon.createHttpResourceGroup(
-				"curso-service",
+				"disciplina-service",
 				ClientOptions.create()
 				.withMaxAutoRetriesNextServer(3)
 				.withLoadBalancerEnabled(true)
@@ -259,12 +258,12 @@ public class GradeCurricularBean implements Serializable {
 		HttpRequestTemplate<ByteBuf> template = httpResourceGroup
 		.newTemplateBuilder("listAll", ByteBuf.class)
 		.withMethod("GET")
-		.withUriTemplate("/rest/gradescurriculares")
+		.withUriTemplate("/rest/disciplinas")
 		.withFallbackProvider(new FallbackHandler() {
 			@Override
 			public Observable<ByteBuf> getFallback(HystrixInvokableInfo hystrixInvokableInfo, Map map) {
 				System.out.println("<< Serving fallback result list >>");
-				return Observable.just(gradesCachedResults);
+				return Observable.just(disciplinaCachedResults);
 			}
 		})
 		.build();
@@ -279,46 +278,44 @@ public class GradeCurricularBean implements Serializable {
 		ByteBuf responseBuffer = obs.last().copy().retain();
 		Gson gson = new Gson();
 		if(responseBuffer.capacity()>0) {
-
 			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
-			gradesCachedResults = responseBuffer;
-			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
+			disciplinaCachedResults = responseBuffer;
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<Disciplina>>(){}.getType());
 
 		} else {
-			String payload = gradesCachedResults.toString(Charset.forName("UTF-8"));
-			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
+			String payload = disciplinaCachedResults.toString(Charset.forName("UTF-8"));
+			this.pageItems = gson.fromJson(payload, new TypeToken<List<Disciplina>>(){}.getType());
 		}
 	}
 
-	public List<GradeCurricular> getPageItems() {
+	public List<Disciplina> getPageItems() {
 		return this.pageItems;
 	}
 
 	public long getCount() {
 		return this.count;
 	}
+	
+	private ByteBuf disciplinaCachedResults = Unpooled.buffer();
 
 	/*
-	 * Support listing and POSTing back GradeCurricular entities (e.g. from
-	 * inside an HtmlSelectOneMenu)
+	 * Support listing and POSTing back Disciplina entities (e.g. from inside an
+	 * HtmlSelectOneMenu)
 	 */
 
-/*	public List<GradeCurricular> getAll() {
+	public List<Disciplina> getAll() {
 
-		CriteriaQuery<GradeCurricular> criteria = this.entityManager
-				.getCriteriaBuilder().createQuery(GradeCurricular.class);
-		return this.entityManager.createQuery(
-				criteria.select(criteria.from(GradeCurricular.class)))
-				.getResultList();
-	}*/
+		paginate();
+		return this.pageItems;
+	}
 
 	@Resource
 	private SessionContext sessionContext;
 
 	public Converter getConverter() {
 
-		final GradeCurricularBean ejbProxy = this.sessionContext
-				.getBusinessObject(GradeCurricularBean.class);
+		final DisciplinaBean ejbProxy = this.sessionContext
+				.getBusinessObject(DisciplinaBean.class);
 
 		return new Converter() {
 
@@ -337,7 +334,7 @@ public class GradeCurricularBean implements Serializable {
 					return "";
 				}
 
-				return String.valueOf(((GradeCurricular) value).getId());
+				return String.valueOf(((Disciplina) value).getId());
 			}
 		};
 	}
@@ -346,17 +343,15 @@ public class GradeCurricularBean implements Serializable {
 	 * Support adding children to bidirectional, one-to-many tables
 	 */
 
-	private GradeCurricular add = new GradeCurricular();
+	private Disciplina add = new Disciplina();
 
-	public GradeCurricular getAdd() {
+	public Disciplina getAdd() {
 		return this.add;
 	}
 
-	public GradeCurricular getAdded() {
-		GradeCurricular added = this.add;
-		this.add = new GradeCurricular();
+	public Disciplina getAdded() {
+		Disciplina added = this.add;
+		this.add = new Disciplina();
 		return added;
 	}
-	
-	private ByteBuf gradesCachedResults = Unpooled.buffer();
 }

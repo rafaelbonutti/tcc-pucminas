@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>SC@ - Sistema de Controle Acadêmico</title>
+	<link rel="icon" href='#{resource["favicon.ico"]}' />
+</h:head>
+
+<h:body>
+	<b:navBar brand="SC@" brandHref="/index.jsf" inverse="true"
+		fluid="true">
+	</b:navBar>
+
+	<b:container fluid="true">
+		<b:row>
+			<b:column col-sm="3" col-md="2" styleClass="sidebar">
+				<b:listLinks>
+					<b:navLink href="/disciplina/search.jsf" value="Disciplina" />
+					<b:navLink href="/professor/search" value="Professor" />
+					<b:navLink href="/curso/search" value="Curso" />
+					<b:navLink href="/curriculo/search" value="Currículo" />
+					<b:navLink href="/gradeCurricular/search" value="Grade Curricular" />
+				</b:listLinks>
+			</b:column>
+
+			<b:column col-sm="9" offset-sm="3" col-md="10" offset="2"
+				styleClass="main">
+				<h1>
+					<ui:insert name="header" />
+				</h1>
+				<h2>
+					<ui:insert name="subheader" />
+				</h2>
+
+				<ui:insert name="main" />
+			</b:column>
+
+			<footer>
+				<div id="footer-wrapper">
+					<p></p>
+				</div>
+			</footer>
+		</b:row>
+	</b:container>
+</h:body>
+</html>

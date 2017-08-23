@@ -103,11 +103,11 @@ public class ProfessorBean implements Serializable {
 	 */
 
 	public String update() {
-
-		this.conversation.end();
 		
 		if (this.id == null)
 			return insert();
+		
+		this.conversation.end();
 		
 		try {
 			Response response = services
