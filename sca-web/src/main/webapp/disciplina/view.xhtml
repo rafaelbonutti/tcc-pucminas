@@ -4,49 +4,99 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
-		<f:viewParam name="id" value='#{disciplinaBean.id}'/>
-		<f:event type="preRenderView" listener='#{disciplinaBean.retrieve}'/>
+		<f:viewParam name="id" value='#{disciplinaBean.id}' />
+		<f:event type="preRenderView" listener='#{disciplinaBean.retrieve}' />
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="View Disciplina"/>
+	<ui:param name="pageTitle" value="View Disciplina" />
 
 	<ui:define name="header">
 		Disciplina
 	</ui:define>
 
 	<ui:define name="subheader">
-		View existing Disciplina
+		<b:row>
+			<b:column>
+				<b:buttonToolbar styleClass="pull-right">
+					<b:button value="Listar" outcome="search" look="primary"
+						iconAwesome="search" />
+					<b:button value="Editar" outcome="create" look="primary"
+						iconAwesome="edit" includeViewParams="true" />
+					<b:button value="Criar" outcome="create" look="primary"
+						iconAwesome="plus" />
+				</b:buttonToolbar>
+			</b:column>
+		</b:row>
 	</ui:define>
 
-	<ui:define name="footer"/>
+	<ui:define name="footer" />
 
 	<ui:define name="main">
-		<h:panelGrid columnClasses="label,component,required" columns="3">
-			<h:outputLabel for="disciplinaBeanDisciplinaCodigo" value="Codigo:"/>
-			<h:outputText id="disciplinaBeanDisciplinaCodigo" value="#{disciplinaBean.disciplina.codigo}"/>
-			<h:outputText/>
-			<h:outputLabel for="disciplinaBeanDisciplinaNome" value="Nome:"/>
-			<h:outputText id="disciplinaBeanDisciplinaNome" value="#{disciplinaBean.disciplina.nome}"/>
-			<h:outputText/>
-			<h:outputLabel for="disciplinaBeanDisciplinaEmenta" value="Ementa:"/>
-			<h:inputTextarea id="disciplinaBeanDisciplinaEmenta" value="#{disciplinaBean.disciplina.ementa}"/>
-			<h:outputText/>
-			<h:outputLabel for="disciplinaBeanDisciplinaCreditos" value="Creditos:"/>
-			<h:outputText id="disciplinaBeanDisciplinaCreditos" value="#{disciplinaBean.disciplina.creditos}"/>
-			<h:outputText/>
-			<h:outputLabel for="disciplinaBeanDisciplinaCargaHoraria" value="Carga Horaria:"/>
-			<h:outputText id="disciplinaBeanDisciplinaCargaHoraria" value="#{disciplinaBean.disciplina.cargaHoraria}"/>
-			<h:outputText/>
-		</h:panelGrid>
-
-		<div class="buttons">
-			<h:link value="View All" outcome="search" styleClass="btn btn-primary"/> 
-			<h:link value="Edit" outcome="create" includeViewParams="true" styleClass="btn btn-primary"/>
-			<h:link value="Create New" outcome="create" styleClass="btn btn-primary"/>
-		</div>
+		<b:row>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputLabel for="disciplinaBeanDisciplinaCodigo" value="Codigo:" />
+			</b:column>
+			<b:column col-xs="10" col-sm="10">
+				<h:outputText id="disciplinaBeanDisciplinaCodigo"
+					value="#{disciplinaBean.disciplina.codigo}" />
+			</b:column>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputText />
+			</b:column>
+		</b:row>
+		<b:row>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputLabel for="disciplinaBeanDisciplinaNome" value="Nome:" />
+			</b:column>
+			<b:column col-xs="10" col-sm="10">
+				<h:outputText id="disciplinaBeanDisciplinaNome"
+					value="#{disciplinaBean.disciplina.nome}" />
+			</b:column>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputText />
+			</b:column>
+		</b:row>
+		<b:row>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputLabel for="disciplinaBeanDisciplinaEmenta" value="Ementa:" />
+			</b:column>
+			<b:column col-xs="10" col-sm="10">
+				<h:outputText id="disciplinaBeanDisciplinaEmenta"
+					value="#{disciplinaBean.disciplina.ementa}" />
+			</b:column>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputText />
+			</b:column>
+		</b:row>
+		<b:row>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputLabel for="disciplinaBeanDisciplinaCreditos"
+					value="Creditos:" />
+			</b:column>
+			<b:column col-xs="10" col-sm="10">
+				<h:outputText id="disciplinaBeanDisciplinaCreditos"
+					value="#{disciplinaBean.disciplina.creditos}" />
+			</b:column>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputText />
+			</b:column>
+		</b:row>
+		<b:row>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputLabel for="disciplinaBeanDisciplinaCargaHoraria"
+					value="Carga Horaria:" />
+			</b:column>
+			<b:column col-xs="10" col-sm="10">
+				<h:outputText id="disciplinaBeanDisciplinaCargaHoraria"
+					value="#{disciplinaBean.disciplina.cargaHoraria}" />
+			</b:column>
+			<b:column col-xs="2" col-sm="2">
+				<h:outputText />
+			</b:column>
+		</b:row>
 	</ui:define>
-
 </ui:composition>

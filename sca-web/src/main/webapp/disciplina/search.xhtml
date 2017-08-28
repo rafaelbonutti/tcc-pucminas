@@ -18,55 +18,67 @@
 		Disciplina
 	</ui:define>
 
+	<ui:define name="subheader">
+		<b:row>
+			<b:column>
+				<b:buttonToolbar styleClass="pull-right">
+					<b:buttonGroup>
+						<b:button value="Criar" outcome="create" look="primary"
+							iconAwesome="plus" />
+					</b:buttonGroup>
+				</b:buttonToolbar>
+			</b:column>
+		</b:row>
+	</ui:define>
+
+	<ui:define name="footer" />
+
 	<ui:define name="main">
-		<b:container fluid="true">
-			<h:form id="search">
-
-				<b:commandButton value="Novo" icon="plus-sign"
-					action="#{disciplinaBean.create}" look="primary" />
-
-				<b:dataTable id="disciplinaBeanPageItems" styleClass="data-table"
-					custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
-					value="#{disciplinaBean.pageItems}" var="_item">
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Codigo" />
-						</f:facet>
-						<h:link outcome="/disciplina/view">
-							<f:param name="id" value="#{_item.id}" />
-							<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
-						</h:link>
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Nome" />
-						</f:facet>
-						<h:link outcome="/disciplina/view">
-							<f:param name="id" value="#{_item.id}" />
-							<h:outputText id="_itemNome" value="#{_item.nome}" />
-						</h:link>
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Creditos" />
-						</f:facet>
-						<h:link outcome="/disciplina/view">
-							<f:param name="id" value="#{_item.id}" />
-							<h:outputText id="_itemCreditos" value="#{_item.creditos}" />
-						</h:link>
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Carga Horaria" />
-						</f:facet>
-						<h:link outcome="/disciplina/view">
-							<f:param name="id" value="#{_item.id}" />
-							<h:outputText id="_itemCargaHoraria"
-								value="#{_item.cargaHoraria}" />
-						</h:link>
-					</h:column>
-				</b:dataTable>
-			</h:form>
-		</b:container>
+		<h:form id="search">
+			<h:dataTable id="disciplinaBeanPageItems"
+				styleClass="table table-striped" value="#{disciplinaBean.pageItems}"
+				var="_item" rows="15">
+				<!-- <b:dataTable id="disciplinaBeanPageItems" styleClass="data-table"
+				custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+				value="#{disciplinaBean.pageItems}" var="_item"> -->
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Codigo" />
+					</f:facet>
+					<h:link outcome="/disciplina/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Nome" />
+					</f:facet>
+					<h:link outcome="/disciplina/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemNome" value="#{_item.nome}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Creditos" />
+					</f:facet>
+					<h:link outcome="/disciplina/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCreditos" value="#{_item.creditos}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Carga Horaria" />
+					</f:facet>
+					<h:link outcome="/disciplina/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCargaHoraria" value="#{_item.cargaHoraria}" />
+					</h:link>
+				</h:column>
+				<!-- </b:dataTable> -->
+			</h:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>
