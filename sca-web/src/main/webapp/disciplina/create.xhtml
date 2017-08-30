@@ -24,7 +24,7 @@
 	<ui:define name="main">
 		<b:form id="create" horizontal="true">
 			<b:panelGrid columns="2">
-				<b:inputText id="disciplinaBeanDisciplinaCodigo" maxLength="7"
+				<b:inputText id="disciplinaBeanDisciplinaCodigo" maxLength="7" mask="AAA999"
 					placeholder="Código" label="Código" colMd="9" labelColMd="3"
 					required="true" value="#{disciplinaBean.disciplina.codigo}" />
 				<h:message for="disciplinaBeanDisciplinaCodigo" styleClass="error" />
@@ -62,7 +62,8 @@
 						icon="back">
 					</b:button>
 					<b:commandButton value="Deletar" action='#{disciplinaBean.delete}'
-						look="danger" iconAwesome="trash-o" />
+						rendered="#{not empty disciplinaBean.id}" look="danger"
+						iconAwesome="trash-o" />
 				</b:buttonToolbar>
 			</div>
 		</b:form>

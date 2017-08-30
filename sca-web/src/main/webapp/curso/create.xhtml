@@ -27,7 +27,7 @@
 	<ui:define name="main">
 		<b:form id="create" horizontal="true">
 			<b:panelGrid columns="2">
-				<b:inputText id="cursoBeanCursoCodigo" maxLength="3"
+				<b:inputText id="cursoBeanCursoCodigo" maxLength="3" mask="AAA"
 					placeholder="Código" label="Código" colMd="9" labelColMd="3"
 					required="true" value="#{cursoBean.curso.codigo}" />
 				<h:message for="cursoBeanCursoCodigo" styleClass="error" />
@@ -62,7 +62,8 @@
 						rendered="#{empty cursoBean.id}" iconAwesome="ban" icon="back">
 					</b:button>
 					<b:commandButton value="Deletar" action='#{cursoBean.delete}'
-						look="danger" iconAwesome="trash-o" />
+						rendered="#{not empty cursoBean.id}" look="danger"
+						iconAwesome="trash-o" />
 				</b:buttonToolbar>
 			</div>
 		</b:form>
