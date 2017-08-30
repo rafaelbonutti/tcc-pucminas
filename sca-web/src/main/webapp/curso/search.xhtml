@@ -4,111 +4,88 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
-		<f:viewParam name="page" value='#{cursoBean.page}'/>
-		<f:event type="preRenderView" listener='#{cursoBean.paginate}'/>
+		<f:viewParam name="page" value='#{cursoBean.page}' />
+		<f:event type="preRenderView" listener='#{cursoBean.paginate}' />
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="Search Curso entities"/>
+	<ui:param name="pageTitle" value="Search Curso entities" />
 
 	<ui:define name="header">
 		Curso
 	</ui:define>
 
-<!-- 	<ui:define name="subheader">
-		Search Curso entities
-	</ui:define> -->
+	<ui:define name="subheader">
+		<b:row>
+			<b:column>
+				<b:buttonToolbar styleClass="pull-right">
+					<b:buttonGroup>
+						<b:button value="Criar" outcome="create" look="primary"
+							iconAwesome="plus" />
+					</b:buttonGroup>
+				</b:buttonToolbar>
+			</b:column>
+		</b:row>
+	</ui:define>
 
-	<ui:define name="footer"/>
+	<ui:define name="footer" />
 
 	<ui:define name="main">
 		<h:form id="search">
-			<f:validateBean disabled="true">
-				<h:panelGroup styleClass="container">
-
-<!-- 					<h:panelGrid columnClasses="label,component,required" columns="3">
-						<h:outputLabel for="cursoBeanExampleNome" value="Nome:"/>
-						<h:panelGroup>
-							<h:inputText id="cursoBeanExampleNome" maxLength="100" value="#{cursoBean.example.nome}"/>
-							<h:message for="cursoBeanExampleNome" styleClass="error"/>
-						</h:panelGroup>
-						<h:outputText/>
-						<h:outputLabel for="cursoBeanExampleDescricao" value="Descricao:"/>
-						<h:panelGroup>
-							<h:inputTextarea id="cursoBeanExampleDescricao" value="#{cursoBean.example.descricao}"/>
-							<h:message for="cursoBeanExampleDescricao" styleClass="error"/>
-						</h:panelGroup>
-						<h:outputText/>
-						<h:outputLabel for="cursoBeanExampleModalidade" value="Modalidade:"/>
-						<h:panelGroup>
-							<h:selectOneMenu id="cursoBeanExampleModalidade" value="#{cursoBean.example.modalidade}">
-								<f:selectItem/>
-								<f:selectItem itemValue="BACHARELADO"/>
-								<f:selectItem itemValue="LICENCIATURA"/>
-								<f:selectItem itemValue="TECNOLOGO"/>
-							</h:selectOneMenu>
-							<h:message for="cursoBeanExampleModalidade" styleClass="error"/>
-						</h:panelGroup>
-						<h:outputText/>
-						<h:outputLabel for="cursoBeanExampleCodigo" value="Codigo:"/>
-						<h:panelGroup>
-							<h:inputText id="cursoBeanExampleCodigo" maxLength="3" value="#{cursoBean.example.codigo}"/>
-							<h:message for="cursoBeanExampleCodigo" styleClass="error"/>
-						</h:panelGroup>
-						<h:outputText/>
-					</h:panelGrid> -->
-					<h:panelGroup styleClass="buttons">
-						<h:commandLink value="Search" action='#{cursoBean.search}' styleClass="btn btn-primary"/>
-						<h:commandLink value="Create New" action='#{cursoBean.create}' styleClass="btn btn-primary"/>
-					</h:panelGroup>
-				</h:panelGroup>
-			</f:validateBean>
-			
-			<h:dataTable id="cursoBeanPageItems" styleClass="data-table" value="#{cursoBean.pageItems}" var="_item">
+			<h:dataTable id="cursoBeanPageItems" styleClass="table table-striped"
+				value="#{cursoBean.pageItems}" var="_item" rows="15">
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Nome"/>
+						<h:outputText value="ID" />
 					</f:facet>
 					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:outputText id="_itemNome" value="#{_item.nome}"/>
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemId" value="#{_item.id}" />
 					</h:link>
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Descricao"/>
+						<h:outputText value="Código" />
 					</f:facet>
 					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:inputTextarea id="_itemDescricao" value="#{_item.descricao}"/>
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
 					</h:link>
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Modalidade"/>
+						<h:outputText value="Nome" />
 					</f:facet>
 					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:outputText id="_itemModalidade" value="#{_item.modalidade}"/>
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemNome" value="#{_item.nome}" />
 					</h:link>
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Codigo"/>
+						<h:outputText value="Descrição" />
 					</f:facet>
 					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:outputText id="_itemCodigo" value="#{_item.codigo}"/>
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemDescricao" value="#{_item.descricao}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Modalidade" />
+					</f:facet>
+					<h:link outcome="/curso/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemModalidade" value="#{_item.modalidade}" />
 					</h:link>
 				</h:column>
 			</h:dataTable>
 			<ui:include src="/resources/scaffold/paginator.xhtml">
-				<ui:param name="paginatorBean" value='#{cursoBean}'/>
+				<ui:param name="paginatorBean" value='#{cursoBean}' />
 			</ui:include>
 		</h:form>
-			
 	</ui:define>
-
 </ui:composition>

@@ -15,18 +15,18 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.5.2/holder.min.js">
 	</script>
+	
 	<b:navBar brand="SC@" brandHref="/index.jsf"
 		alt="Sistema de Controle Acadêmico" inverse="true" fixed="top"
 		fluid="true">
 		<b:navbarLinks>
 			<b:navLink outcome="/disciplina/search" value="Disciplina" />
-			<b:navLink outcome="/professor/search" value="Professor" />
 			<b:navLink outcome="/curso/search" value="Curso" />
 			<b:navLink outcome="/curriculo/search" value="Currículo" />
 			<b:navLink outcome="/gradeCurricular/search" value="Grade Curricular" />
 		</b:navbarLinks>
 		<b:navbarLinks pull="right">
-			<b:navLink value="Login" href="#"></b:navLink>
+			<b:navLink value="Sair" href="http://localhost:8083/auth/realms/SCA/protocol/openid-connect/logout?redirect_uri=http://192.168.25.86:8080"></b:navLink>
 		</b:navbarLinks>
 	</b:navBar>
 	<b:container fluid="true">
@@ -36,6 +36,9 @@
 		<hr />
 		<ui:insert name="subheader" />
 		<ui:insert name="main" />
+<!-- 		<footer class="footer">
+			<span class="text-muted">Sistema de Controle Acadêmico.</span>
+		</footer> -->
 	</b:container>
 </h:body>
 </html>

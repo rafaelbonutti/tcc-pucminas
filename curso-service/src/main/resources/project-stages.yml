@@ -13,7 +13,8 @@ swarm:
         password: sca84354637
         initial-pool-size: 3
         max-pool-size: 10
-        idle-timeout-minutes: 30
+        idle-timeout-minutes: 60
+        check-valid-connection-sql: SELECT 1
   port:
     offset: 15
   bind:

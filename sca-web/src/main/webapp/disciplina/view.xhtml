@@ -33,70 +33,28 @@
 		</b:row>
 	</ui:define>
 
-	<ui:define name="footer" />
-
 	<ui:define name="main">
-		<b:row>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputLabel for="disciplinaBeanDisciplinaCodigo" value="Codigo:" />
-			</b:column>
-			<b:column col-xs="10" col-sm="10">
-				<h:outputText id="disciplinaBeanDisciplinaCodigo"
-					value="#{disciplinaBean.disciplina.codigo}" />
-			</b:column>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputText />
-			</b:column>
-		</b:row>
-		<b:row>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputLabel for="disciplinaBeanDisciplinaNome" value="Nome:" />
-			</b:column>
-			<b:column col-xs="10" col-sm="10">
-				<h:outputText id="disciplinaBeanDisciplinaNome"
-					value="#{disciplinaBean.disciplina.nome}" />
-			</b:column>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputText />
-			</b:column>
-		</b:row>
-		<b:row>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputLabel for="disciplinaBeanDisciplinaEmenta" value="Ementa:" />
-			</b:column>
-			<b:column col-xs="10" col-sm="10">
-				<h:outputText id="disciplinaBeanDisciplinaEmenta"
-					value="#{disciplinaBean.disciplina.ementa}" />
-			</b:column>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputText />
-			</b:column>
-		</b:row>
-		<b:row>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputLabel for="disciplinaBeanDisciplinaCreditos"
-					value="Creditos:" />
-			</b:column>
-			<b:column col-xs="10" col-sm="10">
-				<h:outputText id="disciplinaBeanDisciplinaCreditos"
-					value="#{disciplinaBean.disciplina.creditos}" />
-			</b:column>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputText />
-			</b:column>
-		</b:row>
-		<b:row>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputLabel for="disciplinaBeanDisciplinaCargaHoraria"
-					value="Carga Horaria:" />
-			</b:column>
-			<b:column col-xs="10" col-sm="10">
-				<h:outputText id="disciplinaBeanDisciplinaCargaHoraria"
-					value="#{disciplinaBean.disciplina.cargaHoraria}" />
-			</b:column>
-			<b:column col-xs="2" col-sm="2">
-				<h:outputText />
-			</b:column>
-		</b:row>
+		<b:panelGrid colSpans="2,10" columns="2">
+			<h:outputLabel for="disciplinaBeanDisciplinaId" value="ID" />
+			<h:outputText id="disciplinaBeanDisciplinaId"
+				value="#{disciplinaBean.disciplina.id}" />
+			<h:outputLabel for="disciplinaBeanDisciplinaCodigo" value="Codigo:" />
+			<h:outputText id="disciplinaBeanDisciplinaCodigo"
+				value="#{disciplinaBean.disciplina.codigo}" />
+			<h:outputLabel for="disciplinaBeanDisciplinaNome" value="Nome:" />
+			<h:outputText id="disciplinaBeanDisciplinaNome"
+				value="#{disciplinaBean.disciplina.nome}" />
+			<h:outputLabel for="disciplinaBeanDisciplinaEmenta" value="Ementa:" />
+			<h:outputText id="disciplinaBeanDisciplinaEmenta"
+				value="#{disciplinaBean.disciplina.ementa}" />
+			<h:outputLabel for="disciplinaBeanDisciplinaCreditos"
+				value="Creditos:" />
+			<h:outputText id="disciplinaBeanDisciplinaCreditos"
+				value="#{disciplinaBean.disciplina.creditos}" />
+			<h:outputLabel for="disciplinaBeanDisciplinaCargaHoraria"
+				value="Carga Horaria:" />
+			<h:outputText id="disciplinaBeanDisciplinaCargaHoraria"
+				value="#{disciplinaBean.disciplina.cargaHoraria}" />
+		</b:panelGrid>
 	</ui:define>
 </ui:composition>

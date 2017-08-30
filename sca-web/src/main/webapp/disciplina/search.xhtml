@@ -31,8 +31,6 @@
 		</b:row>
 	</ui:define>
 
-	<ui:define name="footer" />
-
 	<ui:define name="main">
 		<h:form id="search">
 			<h:dataTable id="disciplinaBeanPageItems"
@@ -43,7 +41,16 @@
 				value="#{disciplinaBean.pageItems}" var="_item"> -->
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Codigo" />
+						<h:outputText value="ID" />
+					</f:facet>
+					<h:link outcome="/disciplina/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemId" value="#{_item.id}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Código" />
 					</f:facet>
 					<h:link outcome="/disciplina/view">
 						<f:param name="id" value="#{_item.id}" />
@@ -61,7 +68,7 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Creditos" />
+						<h:outputText value="Créditos" />
 					</f:facet>
 					<h:link outcome="/disciplina/view">
 						<f:param name="id" value="#{_item.id}" />
@@ -70,7 +77,7 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="Carga Horaria" />
+						<h:outputText value="Carga Horária" />
 					</f:facet>
 					<h:link outcome="/disciplina/view">
 						<f:param name="id" value="#{_item.id}" />

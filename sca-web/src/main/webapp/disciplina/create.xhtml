@@ -21,8 +21,6 @@
 
 	<ui:define name="subheader" />
 
-	<ui:define name="footer" />
-
 	<ui:define name="main">
 		<b:form id="create" horizontal="true">
 			<b:panelGrid columns="2">
@@ -54,9 +52,14 @@
 				<b:buttonToolbar>
 					<b:commandButton value="Salvar" action='#{disciplinaBean.update}'
 						look="primary" iconAwesome="save" />
-					<b:button value="Cancelar" look="primary" outcome="view" iconAwesome="ban"
+					<b:button value="Cancelar" look="primary" outcome="view"
+						iconAwesome="ban" rendered="#{not empty disciplinaBean.id}"
 						icon="back">
 						<f:param name="id" value='#{disciplinaBean.id}' />
+					</b:button>
+					<b:button value="Cancelar" look="primary" outcome="search"
+						iconAwesome="ban" rendered="#{empty disciplinaBean.id}"
+						icon="back">
 					</b:button>
 					<b:commandButton value="Deletar" action='#{disciplinaBean.delete}'
 						look="danger" iconAwesome="trash-o" />
