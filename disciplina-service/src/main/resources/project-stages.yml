@@ -1,6 +1,3 @@
-service:
-  catalog:
-    service-name: disciplina-service
 logger:
   level: DEBUG
 swarm:

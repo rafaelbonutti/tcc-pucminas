@@ -1,6 +1,3 @@
-service:
-  catalog:
-    service-name: curso-service
 logger:
   level: DEBUG
 swarm:

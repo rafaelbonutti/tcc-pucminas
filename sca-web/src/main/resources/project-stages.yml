@@ -1,6 +1,3 @@
-service:
-  catalog:
-    service-name: sca-web
 logger:
   level: DEBUG
 swarm:
