@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Enumerated;
+import br.pucminas.curso.model.Classificacao;
 
 @Entity
 @Table(name = "TBGRADECURRICULAR")
@@ -35,10 +37,17 @@ public class GradeCurricular implements Serializable {
 	private Curriculo curriculo;
 
 	@Column(name = "DISCIPLINA")
-	private Long disciplina;
-	
+	private Long disciplinaId;
+
 	@Transient
-	private Disciplina disciplinaEntity;
+	private Disciplina disciplina;
+
+	@Column(name = "PERIODO")
+	private Integer periodo;
+
+	@Enumerated
+	@Column(name = "CLASSIFICACAO")
+	private Classificacao classificacao;
 
 	public Long getId() {
 		return this.id;
@@ -89,28 +98,46 @@ public class GradeCurricular implements Serializable {
 		this.curriculo = curriculo;
 	}
 
-	public Long getDisciplina() {
-		return disciplina;
+	public Integer getPeriodo() {
+		return periodo;
 	}
 
-	public void setDisciplina(Long disciplina) {
-		this.disciplina = disciplina;
+	public void setPeriodo(Integer periodo) {
+		this.periodo = periodo;
+	}
+
+	public Classificacao getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(Classificacao classificacao) {
+		this.classificacao = classificacao;
 	}
 
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (disciplina != null)
-			result += "disciplina: " + disciplina;
-		return result;
+		return "GradeCurricular [" + (id != null ? "id=" + id + ", " : "") + "version=" + version + ", "
+				+ (curriculo != null ? "curriculo=" + curriculo + ", " : "")
+				+ (disciplinaId != null ? "disciplinaId=" + disciplinaId + ", " : "")
+				+ (disciplina != null ? "disciplina=" + disciplina + ", " : "")
+				+ (periodo != null ? "periodo=" + periodo + ", " : "")
+				+ (classificacao != null ? "classificacao=" + classificacao : "") + "]";
 	}
 
-	public Disciplina getDisciplinaEntity() {
-		return disciplinaEntity;
+	public Long getDisciplinaId() {
+		return disciplinaId;
 	}
 
-	public void setDisciplinaEntity(Disciplina disciplinaEntity) {
-		this.disciplinaEntity = disciplinaEntity;
+	public void setDisciplinaId(Long disciplinaId) {
+		this.disciplinaId = disciplinaId;
+	}
+
+	public Disciplina getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(Disciplina disciplina) {
+		this.disciplina = disciplina;
 	}
 
 }

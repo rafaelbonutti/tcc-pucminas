@@ -1,0 +1,7 @@
+{
+  "realm": "SCA",
+  "auth-server-url": "http://localhost:8083/auth",
+  "ssl-required": "external",
+  "resource": "sca-web",
+  "public-client": true
+}

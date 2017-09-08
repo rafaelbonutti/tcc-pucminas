@@ -4,6 +4,12 @@ service:
 logger:
   level: DEBUG
 swarm:
+  keycloak:
+      security:
+          constraints:
+             - url-pattern: /rest/*
+               methods: [GET,POST,PUT,DELETE]
+               roles: [admin]
   datasources:
     data-sources:
       ExampleDS:
@@ -18,7 +24,7 @@ swarm:
   port:
     offset: 20
   bind:
-    address: 192.168.25.86
+    address: 127.0.0.1
   topology:
     consul:
       url: http://127.0.0.1:8500

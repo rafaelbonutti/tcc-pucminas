@@ -8,7 +8,7 @@ swarm:
     data-sources:
       ExampleDS:
         driver-name: mysql
-        connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca
+        connection-url: jdbc:mysql://sca.cwhieiaciaj0.sa-east-1.rds.amazonaws.com:3306/sca?characterEncoding=UTF-8
         user-name: sca
         password: sca84354637
         initial-pool-size: 3
@@ -18,7 +18,7 @@ swarm:
   port:
     offset: 15
   bind:
-    address: 192.168.25.86
+    address: 127.0.0.1
   topology:
     consul:
       url: http://127.0.0.1:8500

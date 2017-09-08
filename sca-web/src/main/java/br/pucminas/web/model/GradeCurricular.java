@@ -5,12 +5,15 @@ import java.io.Serializable;
 public class GradeCurricular implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
 	private Long id;
 	private int version;
 	private Curriculo curriculo;
-	private Long disciplina;
-	private Disciplina disciplinaEntity;
-	
+	private Long disciplinaId;
+	private Disciplina disciplina;
+	private Integer periodo;
+	private Classificacao classificacao;
+
 	public Long getId() {
 		return this.id;
 	}
@@ -60,28 +63,46 @@ public class GradeCurricular implements Serializable {
 		this.curriculo = curriculo;
 	}
 
-	public Long getDisciplina() {
-		return disciplina;
+	public Integer getPeriodo() {
+		return periodo;
 	}
 
-	public void setDisciplina(Long disciplina) {
-		this.disciplina = disciplina;
+	public void setPeriodo(Integer periodo) {
+		this.periodo = periodo;
+	}
+
+	public Classificacao getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(Classificacao classificacao) {
+		this.classificacao = classificacao;
 	}
 
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (disciplina != null)
-			result += "disciplina: " + disciplina;
-		return result;
+		return "GradeCurricular [" + (id != null ? "id=" + id + ", " : "") + "version=" + version + ", "
+				+ (curriculo != null ? "curriculo=" + curriculo + ", " : "")
+				+ (disciplinaId != null ? "disciplinaId=" + disciplinaId + ", " : "")
+				+ (disciplina != null ? "disciplina=" + disciplina + ", " : "")
+				+ (periodo != null ? "periodo=" + periodo + ", " : "")
+				+ (classificacao != null ? "classificacao=" + classificacao : "") + "]";
 	}
 
-	public Disciplina getDisciplinaEntity() {
-		return disciplinaEntity;
+	public Long getDisciplinaId() {
+		return disciplinaId;
 	}
 
-	public void setDisciplinaEntity(Disciplina disciplinaEntity) {
-		this.disciplinaEntity = disciplinaEntity;
+	public void setDisciplinaId(Long disciplinaId) {
+		this.disciplinaId = disciplinaId;
+	}
+
+	public Disciplina getDisciplina() {
+		return disciplina;
+	}
+
+	public void setDisciplina(Disciplina disciplina) {
+		this.disciplina = disciplina;
 	}
 
 }

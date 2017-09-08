@@ -108,7 +108,7 @@ public class GradeCurricularBean implements Serializable {
 			this.disciplinas = disciplinaBean.getAll();
 		} else {
 			this.gradeCurricular = findById(getId());
-			this.gradeCurricular.setDisciplinaEntity(disciplinaBean.findById(gradeCurricular.getDisciplina()));
+			this.gradeCurricular.setDisciplina(disciplinaBean.findById(gradeCurricular.getDisciplinaId()));
 		}
 	}
 
@@ -288,6 +288,10 @@ public class GradeCurricularBean implements Serializable {
 			String payload = gradesCachedResults.toString(Charset.forName("UTF-8"));
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
 		}
+		
+		//TODO - refazer com outra estratégia de integração de dados (ex: view materializada)
+		for(GradeCurricular item : this.pageItems)
+			item.setDisciplina(disciplinaBean.findById(item.getDisciplinaId()));
 	}
 
 	public List<GradeCurricular> getPageItems() {

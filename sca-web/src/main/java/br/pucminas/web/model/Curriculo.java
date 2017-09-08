@@ -65,10 +65,7 @@ public class Curriculo implements Serializable {
 
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (semestre != null)
-			result += "semestre: " + semestre;
-		return result;
+		return ano + " / " + semestre;
 	}
 
 	public Integer getAno() {

@@ -5,7 +5,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:forgeview="http://jboss.org/forge/view"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
 		<f:viewParam name="page" value='#{gradeCurricularBean.page}' />
@@ -19,56 +20,28 @@
 		Grade Curricular
 	</ui:define>
 
-<!-- 	<ui:define name="subheader">
-		Search Grade Curricular entities
-	</ui:define> -->
+	<ui:define name="subheader">
+		<b:row>
+			<b:column>
+				<b:buttonToolbar styleClass="pull-right">
+					<b:buttonGroup>
+						<b:button value="Criar" outcome="create" look="primary"
+							iconAwesome="plus" />
+					</b:buttonGroup>
+				</b:buttonToolbar>
+			</b:column>
+		</b:row>
+	</ui:define>
+
+	<ui:define name="footer" />
 
 	<ui:define name="footer" />
 
 	<ui:define name="main">
 		<h:form id="search">
-			<f:validateBean disabled="true">
-				<h:panelGroup styleClass=".container-fluid">
-
-					<!-- <h:panelGrid columnClasses="label,component,required" columns="3">
-						<h:outputLabel for="gradeCurricularBeanExampleCurriculo"
-							value="Curriculo:" />
-						<h:panelGroup>
-							<h:selectOneMenu converter="#{curriculoBean.converter}"
-								id="gradeCurricularBeanExampleCurriculo"
-								value="#{gradeCurricularBean.example.curriculo}">
-								<f:selectItem />
-								<f:selectItems itemLabel="#{forgeview:display(_item)}"
-									itemValue="#{_item}" value="#{curriculoBean.all}" var="_item" />
-							</h:selectOneMenu>
-							<h:message for="gradeCurricularBeanExampleCurriculo"
-								styleClass="error" />
-						</h:panelGroup>
-						<h:outputText />
-						<h:outputLabel for="gradeCurricularBeanExampleDisciplina"
-							value="Disciplina:" />
-						<h:panelGroup>
-							<h:inputText id="gradeCurricularBeanExampleDisciplina"
-								value="#{gradeCurricularBean.example.disciplina}" />
-							<h:message for="gradeCurricularBeanExampleDisciplina"
-								styleClass="error" />
-						</h:panelGroup>
-						<h:outputText />
-					</h:panelGrid> -->
-					<h:panelGroup styleClass="buttons">
-						<h:commandLink value="Search"
-							action='#{gradeCurricularBean.search}'
-							styleClass="btn btn-primary" />
-						<h:commandLink value="Create New"
-							action='#{gradeCurricularBean.create}'
-							styleClass="btn btn-primary" />
-					</h:panelGroup>
-				</h:panelGroup>
-			</f:validateBean>
-
 			<h:dataTable id="gradeCurricularBeanPageItems"
-				styleClass="data-table" value="#{gradeCurricularBean.pageItems}"
-				var="_item">
+				styleClass="table table-striped"
+				value="#{gradeCurricularBean.pageItems}" var="_item" rows="15">
 				<h:column>
 					<f:facet name="header">
 						<h:outputText value="Curriculo" />
@@ -81,11 +54,40 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">
+						<h:outputText value="Curso" />
+					</f:facet>
+					<h:link outcome="/gradeCurricular/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemCurso"
+							value="#{_item.curriculo.curso.nome}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Período" />
+					</f:facet>
+					<h:link outcome="/gradeCurricular/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemPeriodo" value="#{_item.periodo}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
 						<h:outputText value="Disciplina" />
 					</f:facet>
 					<h:link outcome="/gradeCurricular/view">
 						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemDisciplina" value="#{_item.disciplina}" />
+						<h:outputText id="_itemDisciplina" value="#{_item.disciplina.nome}" />
+					</h:link>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Classificação" />
+					</f:facet>
+					<h:link outcome="/gradeCurricular/view">
+						<f:param name="id" value="#{_item.id}" />
+						<h:outputText id="_itemClassificacao"
+							value="#{_item.classificacao.description}" />
 					</h:link>
 				</h:column>
 			</h:dataTable>

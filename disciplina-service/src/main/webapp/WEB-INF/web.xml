@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="3.1"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+	<display-name>disciplina-service</display-name>
+	<login-config>
+		<auth-method>KEYCLOAK</auth-method>
+		<realm-name>keycloak</realm-name>
+	</login-config>
+	<security-role>
+		<role-name>admin</role-name>
+	</security-role>
+</web-app>

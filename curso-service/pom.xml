@@ -26,13 +26,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.wildfly-swarm>2017.8.1</version.wildfly-swarm>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>
@@ -114,4 +107,11 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<properties>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.wildfly-swarm>2017.9.4</version.wildfly-swarm>
+	</properties>
 </project>
