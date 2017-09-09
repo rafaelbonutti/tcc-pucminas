@@ -48,6 +48,14 @@
 					<f:selectItem itemValue="TECNOLOGO" />
 				</b:selectOneMenu>
 				<h:message for="cursoBeanCursoModalidade" styleClass="error" />
+				<b:selectOneMenu id="cursoBeanCursoCurriculoAtual"
+					label="Currículo Atual" required="true" colMd="9" labelColMd="3"
+					value="#{cursoBean.curso.curriculoAtual}">
+					<f:selectItem itemLabel="--SELECIONE--" />
+					<f:selectItems itemLabel="#{_item}" itemValue="#{_item}"
+						value="#{cursoBean.curso.curriculo}" var="_item" />
+				</b:selectOneMenu>
+				<h:message for="cursoBeanCursoCurriculoAtual" styleClass="error" />
 			</b:panelGrid>
 
 			<div class="buttons">

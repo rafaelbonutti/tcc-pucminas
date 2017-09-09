@@ -23,7 +23,7 @@
 			<b:column>
 				<b:buttonToolbar styleClass="pull-right">
 					<b:buttonGroup>
-						<b:button value="Criar" outcome="create" look="primary"
+						<b:button value="Novo" outcome="create" look="primary"
 							iconAwesome="plus" />
 					</b:buttonGroup>
 				</b:buttonToolbar>
@@ -33,59 +33,23 @@
 
 	<ui:define name="main">
 		<h:form id="search">
-			<h:dataTable id="disciplinaBeanPageItems"
-				styleClass="table table-striped" value="#{disciplinaBean.pageItems}"
-				var="_item" rows="15">
-				<!-- <b:dataTable id="disciplinaBeanPageItems" styleClass="data-table"
+
+			<b:dataTable id="disciplinaBeanPageItems" styleClass="data-table"
+				searching="false" paginated="false" responsive="true"
 				custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
-				value="#{disciplinaBean.pageItems}" var="_item"> -->
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="ID" />
-					</f:facet>
+				value="#{disciplinaBean.pageItems}" var="_item">
+				<b:dataTableColumn label="ID">
 					<h:link outcome="/disciplina/view">
 						<f:param name="id" value="#{_item.id}" />
 						<h:outputText id="_itemId" value="#{_item.id}" />
 					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Código" />
-					</f:facet>
-					<h:link outcome="/disciplina/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Nome" />
-					</f:facet>
-					<h:link outcome="/disciplina/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemNome" value="#{_item.nome}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Créditos" />
-					</f:facet>
-					<h:link outcome="/disciplina/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCreditos" value="#{_item.creditos}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Carga Horária" />
-					</f:facet>
-					<h:link outcome="/disciplina/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCargaHoraria" value="#{_item.cargaHoraria}" />
-					</h:link>
-				</h:column>
-				<!-- </b:dataTable> -->
-			</h:dataTable>
+				</b:dataTableColumn>
+				<b:dataTableColumn value="#{_item.codigo}" label="Código" />
+				<b:dataTableColumn value="#{_item.nome}" label="Nome" />
+				<b:dataTableColumn value="#{_item.creditos}" label="Créditos" />
+				<b:dataTableColumn value="#{_item.cargaHoraria}"
+					label="Carga Horária" />
+			</b:dataTable>
 		</h:form>
 	</ui:define>
 </ui:composition>

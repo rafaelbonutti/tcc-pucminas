@@ -20,24 +20,35 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import br.pucminas.disciplina.model.Disciplina;
 
-/**
- * 
- */
+import br.pucminas.disciplina.model.Disciplina;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Stateless
 @Path("/disciplinas")
+@Api(value = "/disciplinas", tags = "disciplinas")
 public class DisciplinaEndpoint {
 	@PersistenceContext(unitName = "disciplina-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
 	@Consumes("application/json; charset=utf-8")
-	public Response create(Disciplina entity) {
+	@ApiOperation(value = "Cria uma Disciplina",
+	response = Disciplina.class)
+	@ApiResponses(
+			@ApiResponse(
+					code=201,
+					message="Curso inserido com sucesso",
+					response = Disciplina.class))
+	public Response create(@ApiParam(value = "Disciplina a ser inserida", required = true) Disciplina entity) {
 		em.persist(entity);
 		return Response.created(
 				UriBuilder.fromResource(DisciplinaEndpoint.class)
-						.path(String.valueOf(entity.getId())).build()).build();
+				.path(String.valueOf(entity.getId())).build()).build();
 	}
 
 	@DELETE

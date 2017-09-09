@@ -1,5 +1,8 @@
 package br.pucminas.curso.model;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
 public enum Classificacao {
 
 	OB(0, "Obrigatória"),

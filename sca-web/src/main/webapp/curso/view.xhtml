@@ -20,59 +20,84 @@
 	</ui:define>
 
 	<ui:define name="subheader">
-		<b:row>
-			<b:column>
-				<b:buttonToolbar styleClass="pull-right">
-					<b:button value="Listar" outcome="search" look="primary"
-						iconAwesome="search" />
-					<b:button value="Editar" outcome="create" look="primary"
-						iconAwesome="edit" includeViewParams="true" />
-					<b:button value="Criar" outcome="create" look="primary"
-						iconAwesome="plus" />
-				</b:buttonToolbar>
-			</b:column>
-		</b:row>
+		<b:form>
+			<b:row>
+				<b:column>
+					<b:buttonToolbar styleClass="pull-right">
+						<b:button value="Listar" outcome="search" look="primary"
+							iconAwesome="search" />
+						<b:button value="Editar" outcome="create" look="primary"
+							iconAwesome="edit" includeViewParams="true" />
+						<b:commandButton value="Excluir" action='#{cursoBean.delete}'
+							rendered="#{not empty cursoBean.id}" look="danger"
+							iconAwesome="trash-o" />
+					</b:buttonToolbar>
+				</b:column>
+			</b:row>
+		</b:form>
 	</ui:define>
 
 	<ui:define name="footer" />
 
 	<ui:define name="main">
-		<b:panelGrid colSpans="2,10" columns="2">
-			<h:outputLabel for="cursoBeanCursoId" value="ID" />
-			<h:outputText id="cursoBeanCursoId" value="#{cursoBean.curso.id}" />
-			<h:outputLabel for="cursoBeanCursoCodigo" value="Codigo:" />
-			<h:outputText id="cursoBeanCursoCodigo"
-				value="#{cursoBean.curso.codigo}" />
-			<h:outputLabel for="cursoBeanCursoNome" value="Nome:" />
-			<h:outputText id="cursoBeanCursoNome" value="#{cursoBean.curso.nome}" />
-			<h:outputLabel for="cursoBeanCursoDescricao" value="Descricao:" />
-			<h:outputText id="cursoBeanCursoDescricao"
-				value="#{cursoBean.curso.descricao}" />
-			<h:outputLabel for="cursoBeanCursoModalidade" value="Modalidade:" />
-			<h:outputText id="cursoBeanCursoModalidade"
-				value="#{cursoBean.curso.modalidade}" />
-			<!-- <h:outputLabel for="cursoBeanCursoCurriculo" value="Curriculo:"/>
-			<h:dataTable id="cursoBeanCursoCurriculo" styleClass="data-table" value="#{forgeview:asList(cursoBean.curso.curriculo)}" var="_item">
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Semestre"/>
-					</f:facet>
-					<h:link outcome="/curriculo/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:outputText id="_itemSemestre" value="#{_item.semestre}"/>
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Ano"/>
-					</f:facet>
-					<h:link outcome="/curriculo/view">
-						<f:param name="id" value="#{_item.id}"/>
-						<h:outputText id="_itemAno" value="#{_item.ano}"/>
-					</h:link>
-				</h:column>
-			</h:dataTable>
-			<h:outputText/> -->
-		</b:panelGrid>
+		<b:tabView
+			contentStyle="border-right: 1px solid #ddd;border-left: 1px solid #ddd;border-bottom: 1px solid #ddd;padding:10px">
+			<b:tab title="CURSO">
+				<b:panelGrid colSpans="2,10" columns="2">
+					<h:outputLabel for="cursoBeanCursoId" value="ID" />
+					<h:outputText id="cursoBeanCursoId" value="#{cursoBean.curso.id}" />
+					<h:outputLabel for="cursoBeanCursoCodigo" value="Codigo:" />
+					<h:outputText id="cursoBeanCursoCodigo"
+						value="#{cursoBean.curso.codigo}" />
+					<h:outputLabel for="cursoBeanCursoNome" value="Nome:" />
+					<h:outputText id="cursoBeanCursoNome"
+						value="#{cursoBean.curso.nome}" />
+					<h:outputLabel for="cursoBeanCursoDescricao" value="Descricao:" />
+					<h:outputText id="cursoBeanCursoDescricao"
+						value="#{cursoBean.curso.descricao}" />
+					<h:outputLabel for="cursoBeanCursoModalidade" value="Modalidade:" />
+					<h:outputText id="cursoBeanCursoModalidade"
+						value="#{cursoBean.curso.modalidade}" />
+				</b:panelGrid>
+			</b:tab>
+			<b:tab title="CURRÍCULOS">
+				<b:panelGrid colSpans="2,10" columns="2">
+					<b:dataTable id="curriculoItems" styleClass="data-table"
+						searching="false" paginated="false" responsive="true"
+						custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+						value="#{cursoBean.curso.curriculo}" var="_item">
+						<b:dataTableColumn value="#{_item.ano}" label="Ano" order="desc" />
+						<b:dataTableColumn value="#{_item.semestre}" label="Semestre"
+							orderable="false" />
+					</b:dataTable>
+				</b:panelGrid>
+			</b:tab>
+			<b:tab title="GRADE CURRICULAR" id="grade">
+				<h:form id="curso">
+					<b:selectOneMenu value="#{cursoBean.curso.curriculoAtual}"
+						onchange="gradeCursoCurriculoGradeCurricularWidget.DataTable().destroy();ajax:cursoBean.onCurriculoChange()"
+						update="curriculoGradeCurricular">
+						<f:selectItem itemLabel="---SELECIONE---" />
+						<f:selectItems itemLabel="#{_item}" itemValue="#{_item}"
+							value="#{cursoBean.curso.curriculo}" var="_item" />
+					</b:selectOneMenu>
+
+					<b:dataTable id="curriculoGradeCurricular" styleClass="data-table"
+						searching="false" paginated="false" responsive="true"
+						custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+						value="#{cursoBean.curso.curriculoAtual.gradeCurricular}"
+						var="_item">
+						<b:dataTableColumn value="#{_item.periodo}" label="Período"
+							order="asc" />
+						<b:dataTableColumn value="#{_item.disciplina.codigo}"
+							label="Código" />
+						<b:dataTableColumn value="#{_item.disciplina.nome}"
+							label="Disciplina" />
+						<b:dataTableColumn value="#{_item.classificacao.description}"
+							label="Classificação" />
+					</b:dataTable>
+				</h:form>
+			</b:tab>
+		</b:tabView>
 	</ui:define>
 </ui:composition>

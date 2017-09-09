@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,46 +12,64 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "TBCURSO")
 @XmlRootElement
+@ApiModel( value = "Curso", description = "Curso oferecido pela universidade" )
 public class Curso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@ApiModelProperty( value = "Identificador único do curso", required = true )
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
+	@ApiModelProperty( value = "Versão", required = false )
 	@Version
 	@Column(name = "VERSION")
 	private int version;
 
-	@Column(length = 100, name = "NOME")
+	@ApiModelProperty( value = "Nome do curso", required = true )
+	@Column(length = 100, name = "NOME", nullable = false)
 	private String nome;
 
-	@Column(length = 3, name = "CODIGO")
+	@ApiModelProperty( value = "Código do curso", required = true )
+	@Column(length = 3, name = "CODIGO", nullable = false)
 	private String codigo;
 
+	@ApiModelProperty( value = "Descrição detalhada do curso", required = false )
 	@Lob
 	@Column(length = 2147483647, name = "DESCRICAO")
 	private String descricao;
 
+	@ApiModelProperty( value = "Modalidae do curso", required = true)
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "MODALIDADE", length = 1)
+	@Column(name = "MODALIDADE", length = 1, nullable = false)
 	private Modalidade modalidade;
 
-	@JsonIgnore
-	@OneToMany(targetEntity = Curriculo.class, mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@ApiModelProperty( value = "Lista de Currículos do curso", required = false )
+	@JsonIgnoreProperties("curso")
+	@OneToMany(targetEntity = Curriculo.class, mappedBy = "curso", fetch = FetchType.EAGER)
 	private Set<Curriculo> curriculo = new HashSet<Curriculo>();
+
+	@ApiModelProperty( value = "Currículo atual do curso", required = false )
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "FKCURRICULOATUAL")
+	private Curriculo curriculoAtual;
 
 	public Long getId() {
 		return this.id;
@@ -143,6 +160,14 @@ public class Curso implements Serializable {
 
 	public void setCurriculo(final Set<Curriculo> curriculo) {
 		this.curriculo = curriculo;
+	}
+
+	public Curriculo getCurriculoAtual() {
+		return curriculoAtual;
+	}
+
+	public void setCurriculoAtual(Curriculo curriculoAtual) {
+		this.curriculoAtual = curriculoAtual;
 	}
 
 }

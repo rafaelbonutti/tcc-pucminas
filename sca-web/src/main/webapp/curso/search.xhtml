@@ -23,7 +23,7 @@
 			<b:column>
 				<b:buttonToolbar styleClass="pull-right">
 					<b:buttonGroup>
-						<b:button value="Criar" outcome="create" look="primary"
+						<b:button value="Novo" outcome="create" look="primary"
 							iconAwesome="plus" />
 					</b:buttonGroup>
 				</b:buttonToolbar>
@@ -35,57 +35,21 @@
 
 	<ui:define name="main">
 		<h:form id="search">
-			<h:dataTable id="cursoBeanPageItems" styleClass="table table-striped"
-				value="#{cursoBean.pageItems}" var="_item" rows="15">
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="ID" />
-					</f:facet>
+			<b:dataTable id="cursoBeanPageItems" styleClass="data-table"
+				searching="false" paginated="false" responsive="true"
+				custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+				value="#{cursoBean.pageItems}" var="_item">
+				<b:dataTableColumn label="ID">
 					<h:link outcome="/curso/view">
 						<f:param name="id" value="#{_item.id}" />
 						<h:outputText id="_itemId" value="#{_item.id}" />
 					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Código" />
-					</f:facet>
-					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCodigo" value="#{_item.codigo}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Nome" />
-					</f:facet>
-					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemNome" value="#{_item.nome}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Descrição" />
-					</f:facet>
-					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemDescricao" value="#{_item.descricao}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Modalidade" />
-					</f:facet>
-					<h:link outcome="/curso/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemModalidade" value="#{_item.modalidade}" />
-					</h:link>
-				</h:column>
-			</h:dataTable>
-			<ui:include src="/resources/scaffold/paginator.xhtml">
-				<ui:param name="paginatorBean" value='#{cursoBean}' />
-			</ui:include>
+				</b:dataTableColumn>
+				<b:dataTableColumn value="#{_item.codigo}" label="Código" />
+				<b:dataTableColumn value="#{_item.nome}" label="Nome" />
+				<b:dataTableColumn value="#{_item.descricao}" label="Descrição" />
+				<b:dataTableColumn value="#{_item.modalidade}" label="Modalidade" />
+			</b:dataTable>
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -2,6 +2,9 @@ package br.pucminas.web.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GradeCurricular implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -9,7 +12,6 @@ public class GradeCurricular implements Serializable {
 	private Long id;
 	private int version;
 	private Curriculo curriculo;
-	private Long disciplinaId;
 	private Disciplina disciplina;
 	private Integer periodo;
 	private Classificacao classificacao;
@@ -83,18 +85,9 @@ public class GradeCurricular implements Serializable {
 	public String toString() {
 		return "GradeCurricular [" + (id != null ? "id=" + id + ", " : "") + "version=" + version + ", "
 				+ (curriculo != null ? "curriculo=" + curriculo + ", " : "")
-				+ (disciplinaId != null ? "disciplinaId=" + disciplinaId + ", " : "")
 				+ (disciplina != null ? "disciplina=" + disciplina + ", " : "")
 				+ (periodo != null ? "periodo=" + periodo + ", " : "")
 				+ (classificacao != null ? "classificacao=" + classificacao : "") + "]";
-	}
-
-	public Long getDisciplinaId() {
-		return disciplinaId;
-	}
-
-	public void setDisciplinaId(Long disciplinaId) {
-		this.disciplinaId = disciplinaId;
 	}
 
 	public Disciplina getDisciplina() {

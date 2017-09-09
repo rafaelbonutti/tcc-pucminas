@@ -20,18 +20,22 @@
 	</ui:define>
 
 	<ui:define name="subheader">
-		<b:row>
-			<b:column>
-				<b:buttonToolbar styleClass="pull-right">
-					<b:button value="Listar" outcome="search" look="primary"
-						iconAwesome="search" />
-					<b:button value="Editar" outcome="create" look="primary"
-						iconAwesome="edit" includeViewParams="true" />
-					<b:button value="Criar" outcome="create" look="primary"
-						iconAwesome="plus" />
-				</b:buttonToolbar>
-			</b:column>
-		</b:row>
+		<b:form>
+			<b:row>
+				<b:column>
+					<b:buttonToolbar styleClass="pull-right">
+						<b:button value="Listar" outcome="search" look="primary"
+							iconAwesome="search" />
+						<b:button value="Editar" outcome="create" look="primary"
+							iconAwesome="edit" includeViewParams="true" />
+						<b:commandButton value="Excluir"
+							action='#{gradeCurricularBean.delete}'
+							rendered="#{not empty gradeCurricularBean.id}" look="danger"
+							iconAwesome="trash-o" />
+					</b:buttonToolbar>
+				</b:column>
+			</b:row>
+		</b:form>
 	</ui:define>
 
 	<ui:define name="footer" />
@@ -63,7 +67,7 @@
 				rendered="#{!empty gradeCurricularBean.gradeCurricular.curriculo}"
 				value="#{gradeCurricularBean.gradeCurricular.disciplina.nome}">
 				<f:param name="id"
-					value="#{gradeCurricularBean.gradeCurricular.disciplinaId}" />
+					value="#{gradeCurricularBean.gradeCurricular.disciplina.id}" />
 			</h:link>
 			<h:outputLabel for="gradeCurricularBeanGradeCurricularDisciplina"
 				value="Classificação" />

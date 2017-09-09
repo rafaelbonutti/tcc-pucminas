@@ -25,29 +25,42 @@ import br.pucminas.curso.model.Curso;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Stateless
 @Path("/cursos")
-@Api(value = "/cursos", tags = "cursos")
+@Api(value = "/rest/cursos", tags = "cursos")
 public class CursoEndpoint {
-	
+
 	@PersistenceContext(unitName = "curso-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
-	@Consumes("application/json; charset=utf-8; charset=utf-8")
-	@ApiOperation(value = "Cria um Curso",
-    response = Curso.class)
+	@Consumes("application/json; charset=utf-8;")
+	@ApiOperation(value = "Cria um novo Curso")
+	@ApiResponses(
+			@ApiResponse(
+					code=201,
+					message="Curso inserido com sucesso",
+					response = Curso.class))
 	public Response create(@ApiParam(value = "Curso a ser inserido", required = true) Curso entity) {
 		em.persist(entity);
 		return Response.created(
 				UriBuilder.fromResource(CursoEndpoint.class)
-						.path(String.valueOf(entity.getId())).build()).build();
+				.path(String.valueOf(entity.getId())).build()).build();
 	}
 
 	@DELETE
 	@Path("/{id:[0-9][0-9]*}")
+	@ApiOperation( 
+			value = "Exclui um Curso pelo ID",  
+			response = Curso.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "O Curso não existe" )    
+	} )
 	public Response deleteById(@PathParam("id") Long id) {
 		Curso entity = em.find(Curso.class, id);
 		if (entity == null) {
@@ -59,8 +72,16 @@ public class CursoEndpoint {
 
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
-	@Produces("application/json; charset=utf-8; charset=utf-8")
-	public Response findById(@PathParam("id") Long id) {
+	@Produces("application/json; charset=utf-8;")
+	@ApiOperation( 
+			value = "Recupera um Curso pelo ID",  
+			response = Curso.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "O Curso não existe" )
+	} )
+	public Response findById(@ApiParam( value = "ID do Curso", required = true) @PathParam("id") Long id) {
 		TypedQuery<Curso> findByIdQuery = em
 				.createQuery(
 						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.curriculo WHERE c.id = :entityId ORDER BY c.id",
@@ -79,9 +100,17 @@ public class CursoEndpoint {
 	}
 
 	@GET
-	@Produces("application/json; charset=utf-8; charset=utf-8")
-	public List<Curso> listAll(@QueryParam("start") Integer startPosition,
-			@QueryParam("max") Integer maxResult) {
+	@Produces("application/json; charset=utf-8;")
+	@ApiOperation( 
+			value = "Lista todos os Cursos",
+			notes = "Lista todos os Cursos. Suporta paginação dos resultados",
+			response = Curso.class, 
+			responseContainer = "List"
+			)
+	@ApiResponses(@ApiResponse( code = 200, message = "Operação realizada com sucesso" ))
+	public List<Curso> listAll(@ApiParam( value = "Página", required = false) @QueryParam("start") Integer startPosition,
+			@ApiParam( value = "Número de registros por página", required = false) @QueryParam("max") Integer maxResult) 
+	{
 		TypedQuery<Curso> findAllQuery = em
 				.createQuery(
 						"SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.curriculo ORDER BY c.id",
@@ -98,7 +127,17 @@ public class CursoEndpoint {
 
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
-	@Consumes("application/json; charset=utf-8; charset=utf-8")
+	@Consumes("application/json; charset=utf-8;")
+	@ApiOperation( 
+			value = "Atualiza um Curso pelo ID",  
+			response = Curso.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 400, message = "O Curso ou ID está nulo" ),
+		@ApiResponse( code = 404, message = "O Curso não existe" ),
+		@ApiResponse( code = 409, message = "ID diferente do ID do Curso informado" )
+	} )
 	public Response update(@PathParam("id") Long id, Curso entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();

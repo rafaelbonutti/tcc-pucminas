@@ -1,5 +1,6 @@
 package br.pucminas.web.view;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -20,8 +21,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.HystrixInvokableInfo;
 import com.netflix.ribbon.ClientOptions;
 import com.netflix.ribbon.Ribbon;
@@ -124,9 +125,9 @@ public class CursoBean implements Serializable {
 
 		if (this.id == null)
 			return insert();
-		
+
 		this.conversation.end();
-		
+
 		try {
 			Response response = services
 					.getCursoService()
@@ -270,15 +271,27 @@ public class CursoBean implements Serializable {
 				.observe().toBlocking();
 
 		ByteBuf responseBuffer = obs.last().copy().retain();
-		Gson gson = new Gson();
+		//Gson gson = new Gson();
+		ObjectMapper mapper = new ObjectMapper();
 		if(responseBuffer.capacity()>0) {
 			String payload = responseBuffer.toString(Charset.forName("UTF-8"));
 			cursoCachedResults = responseBuffer;
-			this.pageItems = gson.fromJson(payload, new TypeToken<List<Curso>>(){}.getType());
+
+			try {
+				this.pageItems = mapper.readValue(payload, new TypeReference<List<Curso>>(){});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			//this.pageItems = gson.fromJson(payload, new TypeToken<List<Curso>>(){}.getType());
 
 		} else {
 			String payload = cursoCachedResults.toString(Charset.forName("UTF-8"));
-			this.pageItems = gson.fromJson(payload, new TypeToken<List<Curso>>(){}.getType());
+			//this.pageItems = gson.fromJson(payload, new TypeToken<List<Curso>>(){}.getType());
+			try {
+				this.pageItems = mapper.readValue(payload, new TypeReference<List<Curso>>(){});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -347,5 +360,9 @@ public class CursoBean implements Serializable {
 		return added;
 	}
 	
+	public void onCurriculoChange(){
+		System.out.println("onCurriculoChange");
+	}
+
 	private ByteBuf cursoCachedResults = Unpooled.buffer();
 }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,35 +17,43 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "TBCURRICULO")
 @XmlRootElement
+@ApiModel( value = "Currículo", description = "Versão curricular de um determinado curso" )
 public class Curriculo implements Serializable {
 
+	@ApiModelProperty( value = "Identificador único do currículo", required = true )
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
+	@ApiModelProperty( value = "Versão", required = false )
 	@Version
 	@Column(name = "VERSION")
 	private int version;
 
+	@ApiModelProperty( value = "Ano de referência", required = true )
 	@Column(length = 4, name = "ANO", nullable = false)
 	private Integer ano;
 
+	@ApiModelProperty( value = "Semestre de referência", required = true )
 	@Column(length = 1, name = "SEMESTRE", nullable = false)
 	private Integer semestre;
 
+	@JsonIgnoreProperties({"curriculo","curriculoAtual"})
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FKCURSO")
 	private Curso curso;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "curriculo", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "curriculo", fetch=FetchType.EAGER)
 	private Set<GradeCurricular> gradeCurricular = new HashSet<GradeCurricular>();
 
 	public Long getId() {

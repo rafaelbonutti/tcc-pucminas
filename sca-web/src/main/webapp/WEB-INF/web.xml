@@ -54,7 +54,8 @@
 			<web-resource-name>Acesso Livre</web-resource-name>
 			<url-pattern>/index.jsf</url-pattern>
 			<url-pattern>/index.html</url-pattern>
-			<url-pattern>/javax.faces.resources/*</url-pattern>
+			<url-pattern>/javax.faces.resource/*</url-pattern>
+			<url-pattern>/fonts/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	<login-config>

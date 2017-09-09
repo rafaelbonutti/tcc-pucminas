@@ -19,18 +19,21 @@
 	</ui:define>
 
 	<ui:define name="subheader">
-		<b:row>
-			<b:column>
-				<b:buttonToolbar styleClass="pull-right">
-					<b:button value="Listar" outcome="search" look="primary"
-						iconAwesome="search" />
-					<b:button value="Editar" outcome="create" look="primary"
-						iconAwesome="edit" includeViewParams="true" />
-					<b:button value="Criar" outcome="create" look="primary"
-						iconAwesome="plus" />
-				</b:buttonToolbar>
-			</b:column>
-		</b:row>
+		<b:form>
+			<b:row>
+				<b:column>
+					<b:buttonToolbar styleClass="pull-right">
+						<b:button value="Listar" outcome="search" look="primary"
+							iconAwesome="search" />
+						<b:button value="Editar" outcome="create" look="primary"
+							iconAwesome="edit" includeViewParams="true" />
+						<b:commandButton value="Excluir" action='#{disciplinaBean.delete}'
+							rendered="#{not empty disciplinaBean.id}" look="danger"
+							iconAwesome="trash-o" />
+					</b:buttonToolbar>
+				</b:column>
+			</b:row>
+		</b:form>
 	</ui:define>
 
 	<ui:define name="main">

@@ -88,7 +88,7 @@ public class GradeCurricularBean implements Serializable {
 		this.conversation.setTimeout(1800000L);
 		return "create?faces-redirect=true";
 	}
-	
+
 	List<Disciplina> disciplinas = new ArrayList<Disciplina>();
 	@Inject DisciplinaBean disciplinaBean;
 
@@ -103,13 +103,13 @@ public class GradeCurricularBean implements Serializable {
 			this.conversation.setTimeout(1800000L);
 		}
 
-		if (this.id == null) {
+		/*		if (this.id == null) {
 			this.gradeCurricular = this.example;
 			this.disciplinas = disciplinaBean.getAll();
 		} else {
 			this.gradeCurricular = findById(getId());
 			this.gradeCurricular.setDisciplina(disciplinaBean.findById(gradeCurricular.getDisciplinaId()));
-		}
+		}*/
 	}
 
 	public GradeCurricular findById(Long id) {
@@ -122,7 +122,7 @@ public class GradeCurricularBean implements Serializable {
 
 		return response;
 	}
-	
+
 	/*
 	 * Support updating and deleting GradeCurricular entities
 	 */
@@ -131,7 +131,7 @@ public class GradeCurricularBean implements Serializable {
 
 		if (this.id == null)
 			return insert();
-		
+
 		this.conversation.end();
 
 		try {
@@ -246,6 +246,9 @@ public class GradeCurricularBean implements Serializable {
 		return null;
 	}
 
+	/**
+	 * 
+	 */
 	public void paginate() {
 
 		HttpResourceGroup httpResourceGroup = Ribbon.createHttpResourceGroup(
@@ -288,10 +291,10 @@ public class GradeCurricularBean implements Serializable {
 			String payload = gradesCachedResults.toString(Charset.forName("UTF-8"));
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
 		}
-		
+
 		//TODO - refazer com outra estratégia de integração de dados (ex: view materializada)
-		for(GradeCurricular item : this.pageItems)
-			item.setDisciplina(disciplinaBean.findById(item.getDisciplinaId()));
+		//		for(GradeCurricular item : this.pageItems)
+		//			item.setDisciplina(disciplinaBean.findById(item.getDisciplinaId()));
 	}
 
 	public List<GradeCurricular> getPageItems() {
@@ -307,7 +310,7 @@ public class GradeCurricularBean implements Serializable {
 	 * inside an HtmlSelectOneMenu)
 	 */
 
-/*	public List<GradeCurricular> getAll() {
+	/*	public List<GradeCurricular> getAll() {
 
 		CriteriaQuery<GradeCurricular> criteria = this.entityManager
 				.getCriteriaBuilder().createQuery(GradeCurricular.class);
@@ -361,6 +364,6 @@ public class GradeCurricularBean implements Serializable {
 		this.add = new GradeCurricular();
 		return added;
 	}
-	
+
 	private ByteBuf gradesCachedResults = Unpooled.buffer();
 }

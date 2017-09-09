@@ -2,22 +2,45 @@ package br.pucminas.curso.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "VWDISCIPLINA")
+@XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Disciplina implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
+	@Transient
 	private int version;
 
+	@Column(length = 7, name = "CODIGO", nullable = false)
 	private String codigo;
 
+	@Column(length = 50, name = "NOME", nullable = false)
 	private String nome;
 
+	@Transient
 	private String ementa;
 
+	@Column(length = 1, name = "CREDITOS", nullable = false)
 	private Integer creditos;
 
+	@Column(length = 3, name = "CARGAHORARIA", nullable = false)
 	private Integer cargaHoraria;
 
 	public Long getId() {

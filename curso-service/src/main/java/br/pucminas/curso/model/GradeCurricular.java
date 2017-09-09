@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,42 +12,50 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.persistence.Enumerated;
-import br.pucminas.curso.model.Classificacao;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "TBGRADECURRICULAR")
 @XmlRootElement
+@ApiModel( value = "Grade Curricular", description = "Grade Curricular de um determinado curso/currículo" )
 public class GradeCurricular implements Serializable {
 
+	@ApiModelProperty( value = "Identificador único da grade curricular", required = true )
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", updatable = false, nullable = false)
 	private Long id;
 
+	@ApiModelProperty( value = "Versão", required = false )
 	@Version
 	@Column(name = "VERSION")
 	private int version;
 
+	@ApiModelProperty( value = "Currículo", required = true )
+	@JsonIgnoreProperties("gradeCurricular")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FKCURRICULO")
 	private Curriculo curriculo;
 
-	@Column(name = "DISCIPLINA")
-	private Long disciplinaId;
-
-	@Transient
+	@ApiModelProperty( value = "Disciplina", required = true )
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "FKDISCIPLINA")
 	private Disciplina disciplina;
 
-	@Column(name = "PERIODO")
+	@ApiModelProperty( value = "Perído", required = true )
+	@Column(name = "PERIODO", nullable = false)
 	private Integer periodo;
 
+	@ApiModelProperty( value = "Classificação da disciplina", required = true )
 	@Enumerated
-	@Column(name = "CLASSIFICACAO")
+	@Column(name = "CLASSIFICACAO", nullable = false)
 	private Classificacao classificacao;
 
 	public Long getId() {
@@ -118,18 +127,9 @@ public class GradeCurricular implements Serializable {
 	public String toString() {
 		return "GradeCurricular [" + (id != null ? "id=" + id + ", " : "") + "version=" + version + ", "
 				+ (curriculo != null ? "curriculo=" + curriculo + ", " : "")
-				+ (disciplinaId != null ? "disciplinaId=" + disciplinaId + ", " : "")
 				+ (disciplina != null ? "disciplina=" + disciplina + ", " : "")
 				+ (periodo != null ? "periodo=" + periodo + ", " : "")
 				+ (classificacao != null ? "classificacao=" + classificacao : "") + "]";
-	}
-
-	public Long getDisciplinaId() {
-		return disciplinaId;
-	}
-
-	public void setDisciplinaId(Long disciplinaId) {
-		this.disciplinaId = disciplinaId;
 	}
 
 	public Disciplina getDisciplina() {

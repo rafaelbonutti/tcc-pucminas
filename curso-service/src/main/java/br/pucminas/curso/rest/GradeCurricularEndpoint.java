@@ -30,19 +30,19 @@ import io.swagger.annotations.ApiParam;
 @Path("/gradescurriculares")
 @Api(value = "/gradescurriculares", tags = "gradescurriculares")
 public class GradeCurricularEndpoint {
-	
+
 	@PersistenceContext(unitName = "curso-service-persistence-unit")
 	private EntityManager em;
 
 	@POST
 	@Consumes("application/json")
 	@ApiOperation(value = "Cria uma Grade Curricular para um determinado Curso",
-    response = GradeCurricular.class)
+	response = GradeCurricular.class)
 	public Response create(@ApiParam(value = "Grade Curricular a ser inserida", required = true) GradeCurricular entity) {
 		em.persist(entity);
 		return Response.created(
 				UriBuilder.fromResource(GradeCurricularEndpoint.class)
-						.path(String.valueOf(entity.getId())).build()).build();
+				.path(String.valueOf(entity.getId())).build()).build();
 	}
 
 	@DELETE
@@ -92,6 +92,21 @@ public class GradeCurricularEndpoint {
 		if (maxResult != null) {
 			findAllQuery.setMaxResults(maxResult);
 		}
+		final List<GradeCurricular> results = findAllQuery.getResultList();
+		return results;
+	}
+
+	@GET
+	@Produces("application/json")
+	@Path("/curriculo/{id:[0-9][0-9]*}")
+	public List<GradeCurricular> listAllByCurriculo(
+			@PathParam("id") Long curriculoId) {
+		TypedQuery<GradeCurricular> findAllQuery = em
+				.createQuery(
+						"SELECT DISTINCT g FROM GradeCurricular g LEFT JOIN FETCH g.curriculo LEFT JOIN FETCH g.disciplina WHERE g.curriculo.id = :curriculoId ORDER BY g.id",
+						GradeCurricular.class)
+				.setParameter("curriculoId", curriculoId);
+
 		final List<GradeCurricular> results = findAllQuery.getResultList();
 		return results;
 	}

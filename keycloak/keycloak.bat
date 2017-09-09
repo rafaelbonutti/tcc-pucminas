@@ -1,0 +1,1 @@
+java -jar -Dswarm.port.offset=3 -Dservice.catalog.service-name=keycloak-server keycloak-2017.9.4-swarm.jar

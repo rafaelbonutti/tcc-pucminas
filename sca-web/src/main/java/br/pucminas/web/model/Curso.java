@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Curso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +17,7 @@ public class Curso implements Serializable {
 	private String descricao;
 	private Modalidade modalidade;
 	private Set<Curriculo> curriculo = new HashSet<Curriculo>();
+	private Curriculo curriculoAtual;
 
 	public Long getId() {
 		return this.id;
@@ -104,6 +108,14 @@ public class Curso implements Serializable {
 
 	public void setCurriculo(final Set<Curriculo> curriculo) {
 		this.curriculo = curriculo;
+	}
+
+	public Curriculo getCurriculoAtual() {
+		return curriculoAtual;
+	}
+
+	public void setCurriculoAtual(Curriculo curriculoAtual) {
+		this.curriculoAtual = curriculoAtual;
 	}
 
 }

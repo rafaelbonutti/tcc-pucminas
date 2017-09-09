@@ -1,12 +1,12 @@
 logger:
   level: DEBUG
 swarm:
-  keycloak:
-      security:
-          constraints:
-             - url-pattern: /rest/*
-               methods: [GET,POST,PUT,DELETE]
-               roles: [admin]
+#  keycloak:
+#      security:
+#          constraints:
+#             - url-pattern: /rest/*
+#               methods: [GET,POST,PUT,DELETE]
+#               roles: [admin]
   datasources:
     data-sources:
       ExampleDS:
