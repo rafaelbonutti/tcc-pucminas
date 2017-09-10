@@ -6,76 +6,67 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:forgeview="http://jboss.org/forge/view"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
-		<f:viewParam name="id" value='#{curriculoBean.id}'/>
-		<f:event type="preRenderView" listener='#{curriculoBean.retrieve}'/>
+		<f:viewParam name="id" value='#{curriculoBean.id}' />
+		<f:event type="preRenderView" listener='#{curriculoBean.retrieve}' />
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="Create Curriculo"/>
+	<ui:param name="pageTitle" value="Create Curriculo" />
 
 	<ui:define name="header">
 		Curriculo
 	</ui:define>
 
-	<ui:define name="subheader">
-		<c:choose>
-			<c:when test='#{!empty curriculoBean.id}'>
-				Edit existing Curriculo
-			</c:when>
-			<c:otherwise>
-				Create a new Curriculo
-			</c:otherwise>
-		</c:choose>
-	</ui:define>
+	<ui:define name="subheader" />
 
-	<ui:define name="footer"/>
+	<ui:define name="footer" />
 
 	<ui:define name="main">
-		<h:form id="create">
-			<h:messages globalOnly="true" styleClass="error"/>
-
-			<h:panelGrid columnClasses="label,component,required" columns="3">
-				<h:outputLabel for="curriculoBeanCurriculoSemestre" value="Semestre:"/>
-				<h:panelGroup>
-					<h:inputText id="curriculoBeanCurriculoSemestre" maxLength="1" required="true" value="#{curriculoBean.curriculo.semestre}"/>
-					<h:message for="curriculoBeanCurriculoSemestre" styleClass="error"/>
-				</h:panelGroup>
-				<h:outputText value="*"/>
-				<h:outputLabel for="curriculoBeanCurriculoAno" value="Ano:"/>
-				<h:panelGroup>
-					<h:inputText id="curriculoBeanCurriculoAno" maxLength="4" required="true" value="#{curriculoBean.curriculo.ano}"/>
-					<h:message for="curriculoBeanCurriculoAno" styleClass="error"/>
-				</h:panelGroup>
-				<h:outputText value="*"/>
-				<h:outputLabel for="curriculoBeanCurriculoCurso" value="Curso:"/>
-				<h:panelGroup>
-					<h:selectOneMenu converter="#{cursoBean.converter}" required="true" id="curriculoBeanCurriculoCurso" value="#{curriculoBean.curriculo.curso}">
-						<f:selectItem/>
-						<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{cursoBean.all}" var="_item"/>
-					</h:selectOneMenu>
-					<h:message for="curriculoBeanCurriculoCurso" styleClass="error"/>
-				</h:panelGroup>
-				<h:outputText value="*"/>
-				<h:outputText/>
-			</h:panelGrid>
+		<b:form id="create" horizontal="true">
+			<b:panelGrid columns="2">
+				<b:selectOneMenu id="curriculoBeanCurriculoSemestre" colMd="9"
+					labelColMd="3" label="Semestre" mask="9" required="true"
+					value="#{curriculoBean.curriculo.semestre}">
+					<f:selectItem itemLabel="---Selecione---" />
+					<f:selectItem itemLabel="1" itemValue="1" />
+					<f:selectItem itemLabel="2" itemValue="2" />
+				</b:selectOneMenu>
+				<h:message for="curriculoBeanCurriculoSemestre" styleClass="error" />
+				<b:inputText id="curriculoBeanCurriculoAno" maxLength="4" colMd="9"
+					labelColMd="3" label="Ano" mask="9999" required="true"
+					value="#{curriculoBean.curriculo.ano}" />
+				<h:message for="curriculoBeanCurriculoAno" styleClass="error" />
+				<b:selectOneMenu required="true" id="curriculoBeanCurriculoCurso"
+					label="Curso" colMd="9" labelColMd="3"
+					value="#{curriculoBean.curriculo.curso}">
+					<f:selectItem itemLabel="---Selecione---" />
+					<f:selectItems itemLabel="#{_item.nome}" itemValue="#{_item}"
+						value="#{cursoBean.all}" var="_item" />
+				</b:selectOneMenu>
+				<h:message for="curriculoBeanCurriculoCurso" styleClass="error" />
+			</b:panelGrid>
 
 			<div class="buttons">
-				<h:commandLink value="Save" action='#{curriculoBean.update}' styleClass="btn btn-primary"/>
-				<c:choose>
-					<c:when test='#{!empty curriculoBean.id}'>
-						<h:link value="Cancel" outcome="view" styleClass="btn btn-primary">
-							<f:param name="id" value='#{curriculoBean.id}'/>
-						</h:link>
-						<h:commandLink value="Delete" action='#{curriculoBean.delete}' styleClass="btn btn-primary"/>
-					</c:when>
-					<c:otherwise>
-						<h:link value="Cancel" outcome="search" styleClass="btn btn-primary"/>
-					</c:otherwise>
-				</c:choose>
+				<b:buttonToolbar>
+					<b:commandButton value="Salvar" action='#{curriculoBean.update}'
+						look="primary" iconAwesome="save" />
+					<b:button value="Cancelar" look="primary" outcome="view"
+						rendered="#{not empty curriculoBean.id}" iconAwesome="ban"
+						icon="back">
+						<f:param name="id" value='#{curriculoBean.id}' />
+					</b:button>
+					<b:button value="Cancelar" look="primary" outcome="search"
+						rendered="#{empty curriculoBean.id}" iconAwesome="ban" icon="back">
+					</b:button>
+					<b:commandButton value="Deletar" action='#{cursoBean.delete}'
+						rendered="#{not empty curriculoBean.id}" look="danger"
+						iconAwesome="trash-o" />
+				</b:buttonToolbar>
 			</div>
-		</h:form>
+		</b:form>
 	</ui:define>
 
 </ui:composition>

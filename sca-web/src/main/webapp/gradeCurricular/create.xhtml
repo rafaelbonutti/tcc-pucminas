@@ -7,7 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:forgeview="http://jboss.org/forge/view"
 	template="/resources/scaffold/pageTemplate.xhtml"
-	xmlns:b="http://bootsfaces.net/ui">
+	xmlns:b="http://bootsfaces.net/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<o:importConstants type="br.pucminas.web.model.Classificacao" />
 
 	<f:metadata>
 		<f:viewParam name="id" value='#{gradeCurricularBean.id}' />
@@ -28,21 +30,53 @@
 	<ui:define name="main">
 		<b:form id="create" horizontal="true">
 			<b:panelGrid columns="2">
-
-				<h:selectOneMenu
-					label="Currículo" required="true" 
-					id="gradeCurricularBeanGradeCurricularCurriculo"
+				<b:selectOneMenu label="Curso/Currículo" required="true" colMd="9"
+					labelColMd="3" id="gradeCurricularBeanGradeCurricularCurriculo"
 					value="#{gradeCurricularBean.gradeCurricular.curriculo}">
-					<f:selectItem />
-					<f:selectItems itemLabel="#{_item}"
+					<f:selectItem itemLabel="---Selecione---" noSelectionOption="true" />
+					<f:selectItems itemLabel="#{_item.curso.nome} - #{_item}"
 						itemValue="#{_item}" value="#{curriculoBean.all}" var="_item" />
-				</h:selectOneMenu>
+				</b:selectOneMenu>
 				<h:message for="gradeCurricularBeanGradeCurricularCurriculo"
 					styleClass="error" />
-
-				<h:inputText id="gradeCurricularBeanGradeCurricularDisciplina" label="Disciplina" required="true"
-					value="#{gradeCurricularBean.gradeCurricular.disciplina}" />
+				<b:selectOneMenu id="gradeCurricularBeanGradeCurricularDisciplina"
+					label="Disciplina" required="true" colMd="9" labelColMd="3"
+					value="#{gradeCurricularBean.gradeCurricular.disciplina}">
+					<f:selectItem itemLabel="---Selecione---" />
+					<f:selectItems itemLabel="#{_item.nome}" itemValue="#{_item}"
+						value="#{disciplinaBean.all}" var="_item" />
+				</b:selectOneMenu>
 				<h:message for="gradeCurricularBeanGradeCurricularDisciplina"
+					styleClass="error" />
+				<b:selectOneMenu id="gradeCurricularBeanGradeCurricularPeriodo"
+					colMd="9" labelColMd="3" label="Período" required="true"
+					value="#{gradeCurricularBean.gradeCurricular.periodo}">
+					<f:selectItem itemLabel="---Selecione---" />
+					<f:selectItem itemLabel="1" itemValue="1" />
+					<f:selectItem itemLabel="2" itemValue="2" />
+					<f:selectItem itemLabel="3" itemValue="3" />
+					<f:selectItem itemLabel="4" itemValue="4" />
+					<f:selectItem itemLabel="5" itemValue="5" />
+					<f:selectItem itemLabel="6" itemValue="6" />
+					<f:selectItem itemLabel="7" itemValue="7" />
+					<f:selectItem itemLabel="8" itemValue="8" />
+					<f:selectItem itemLabel="9" itemValue="9" />
+					<f:selectItem itemLabel="10" itemValue="10" />
+				</b:selectOneMenu>
+				<h:message for="gradeCurricularBeanGradeCurricularPeriodo"
+					styleClass="error" />
+				<b:selectOneMenu
+					id="gradeCurricularBeanGradeCurricularClassificacao" colMd="9"
+					labelColMd="3" label="Classificação" required="true"
+					value="#{gradeCurricularBean.gradeCurricular.classificacao}">
+					<f:selectItem itemLabel="---Selecione---" />
+					<f:selectItem itemLabel="Obrigatória" itemValue="OB"/>
+					<f:selectItem itemLabel="Optativa" itemValue="OP"/>
+					<f:selectItem itemLabel="Eletiva" itemValue="EL"/>
+					<f:selectItem itemLabel="Optativa Complementar" itemValue="OC"/>
+					<f:selectItem itemLabel="Estágio Obrigatório" itemValue="EO"/>
+				</b:selectOneMenu>
+				<h:message for="gradeCurricularBeanGradeCurricularClassificacao"
 					styleClass="error" />
 			</b:panelGrid>
 

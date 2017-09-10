@@ -42,6 +42,9 @@
 
 	<ui:define name="main">
 		<b:panelGrid colSpans="2,10" columns="2">
+			<h:outputLabel for="gradeCurricularBeanGradeCurricularId" value="ID:" />
+			<h:outputText id="gradeCurricularBeanGradeCurricularId"
+				value="#{gradeCurricularBean.gradeCurricular.id}" />
 			<h:outputLabel for="gradeCurricularBeanGradeCurricularCurriculo"
 				value="Currículo:" />
 			<h:link id="gradeCurricularBeanGradeCurricularCurriculo"
@@ -52,7 +55,7 @@
 					value="#{gradeCurricularBean.gradeCurricular.curriculo.id}" />
 			</h:link>
 			<h:outputLabel for="gradeCurricularBeanGradeCurricularCurso"
-				value="Curso" />
+				value="Curso:" />
 			<h:link id="gradeCurricularBeanGradeCurricularCurso"
 				outcome="/curso/view"
 				rendered="#{!empty gradeCurricularBean.gradeCurricular.curriculo}"
@@ -60,6 +63,10 @@
 				<f:param name="id"
 					value="#{gradeCurricularBean.gradeCurricular.curriculo.curso.id}" />
 			</h:link>
+			<h:outputLabel for="gradeCurricularBeanGradeCurricularPeriodo"
+				value="Período:" />
+			<h:outputText id="gradeCurricularBeanGradeCurricularPeriodo"
+				value="#{gradeCurricularBean.gradeCurricular.periodo}" />
 			<h:outputLabel for="gradeCurricularBeanGradeCurricularDisciplina"
 				value="Disciplina:" />
 			<h:link id="gradeCurricularBeanGradeCurricularDisciplina"
@@ -70,7 +77,7 @@
 					value="#{gradeCurricularBean.gradeCurricular.disciplina.id}" />
 			</h:link>
 			<h:outputLabel for="gradeCurricularBeanGradeCurricularDisciplina"
-				value="Classificação" />
+				value="Classificação:" />
 			<h:outputText id="gradeCurricularBeanGradeCurricularClassificacao"
 				value="#{gradeCurricularBean.gradeCurricular.classificacao.description}" />
 		</b:panelGrid>

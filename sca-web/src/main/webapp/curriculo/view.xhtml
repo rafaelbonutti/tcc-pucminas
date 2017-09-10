@@ -4,45 +4,55 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
-		<f:viewParam name="id" value='#{curriculoBean.id}'/>
-		<f:event type="preRenderView" listener='#{curriculoBean.retrieve}'/>
+		<f:viewParam name="id" value='#{curriculoBean.id}' />
+		<f:event type="preRenderView" listener='#{curriculoBean.retrieve}' />
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="View Curriculo"/>
+	<ui:param name="pageTitle" value="View Curriculo" />
 
 	<ui:define name="header">
 		Curriculo
 	</ui:define>
 
 	<ui:define name="subheader">
-		View existing Curriculo
+		<b:form>
+			<b:row>
+				<b:column>
+					<b:buttonToolbar styleClass="pull-right">
+						<b:button value="Listar" outcome="search" look="primary"
+							iconAwesome="search" />
+						<b:button value="Editar" outcome="create" look="primary"
+							iconAwesome="edit" includeViewParams="true" />
+						<b:commandButton value="Excluir" action='#{curriculoBean.delete}'
+							rendered="#{not empty curriculoBean.id}" look="danger"
+							iconAwesome="trash-o" />
+					</b:buttonToolbar>
+				</b:column>
+			</b:row>
+		</b:form>
 	</ui:define>
 
-	<ui:define name="footer"/>
+	<ui:define name="footer" />
 
 	<ui:define name="main">
-		<h:panelGrid columnClasses="label,component,required" columns="3">
-			<h:outputLabel for="curriculoBeanCurriculoSemestre" value="Semestre:"/>
-			<h:outputText id="curriculoBeanCurriculoSemestre" value="#{curriculoBean.curriculo.semestre}"/>
-			<h:outputText/>
-			<h:outputLabel for="curriculoBeanCurriculoAno" value="Ano:"/>
-			<h:outputText id="curriculoBeanCurriculoAno" value="#{curriculoBean.curriculo.ano}"/>
-			<h:outputText/>
-			<h:outputLabel for="curriculoBeanCurriculoCurso" value="Curso:"/>
-			<h:link id="curriculoBeanCurriculoCurso" outcome="/curso/view" rendered="#{!empty curriculoBean.curriculo.curso}" value="#{curriculoBean.curriculo.curso}">
-				<f:param name="id" value="#{curriculoBean.curriculo.curso.id}"/>
+		<b:panelGrid colSpans="2,10" columns="2">
+			<h:outputLabel for="curriculoBeanCurriculoId" value="ID:" />
+			<h:outputText id="curriculoBeanCurriculoId"
+				value="#{curriculoBean.curriculo.id}" />
+			<h:outputLabel for="curriculoBeanCurriculo" value="Currículo:" />
+			<h:outputText id="curriculoBeanCurriculo"
+				value="#{curriculoBean.curriculo}" />
+			<h:outputLabel for="curriculoBeanCurriculoCurso" value="Curso:" />
+			<h:link id="curriculoBeanCurriculoCurso" outcome="/curso/view"
+				rendered="#{!empty curriculoBean.curriculo.curso}"
+				value="#{curriculoBean.curriculo.curso.nome}">
+				<f:param name="id" value="#{curriculoBean.curriculo.curso.id}" />
 			</h:link>
-			<h:outputText/>
-		</h:panelGrid>
-
-		<div class="buttons">
-			<h:link value="View All" outcome="search" styleClass="btn btn-primary"/> 
-			<h:link value="Edit" outcome="create" includeViewParams="true" styleClass="btn btn-primary"/>
-			<h:link value="Create New" outcome="create" styleClass="btn btn-primary"/>
-		</div>
+		</b:panelGrid>
 	</ui:define>
 
 </ui:composition>

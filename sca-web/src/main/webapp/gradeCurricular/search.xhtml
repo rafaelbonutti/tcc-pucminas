@@ -35,67 +35,31 @@
 
 	<ui:define name="footer" />
 
-	<ui:define name="footer" />
-
 	<ui:define name="main">
 		<h:form id="search">
-			<h:dataTable id="gradeCurricularBeanPageItems"
-				styleClass="table table-striped"
-				value="#{gradeCurricularBean.pageItems}" var="_item" rows="15">
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Curriculo" />
-					</f:facet>
+			<b:dataTable id="gradeCurricularBeanPageItems"
+				styleClass="data-table" searching="false" paginated="false"
+				responsive="true"
+				custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+				value="#{gradeCurricularBean.pageItems}" var="_item">
+				<b:dataTableColumn label="ID">
 					<h:link outcome="/gradeCurricular/view">
 						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCurriculo"
-							value="#{_item.curriculo}" />
+						<h:outputText id="_itemId" value="#{_item.id}" />
 					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Curso" />
-					</f:facet>
-					<h:link outcome="/gradeCurricular/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCurso"
-							value="#{_item.curriculo.curso.nome}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Período" />
-					</f:facet>
-					<h:link outcome="/gradeCurricular/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemPeriodo" value="#{_item.periodo}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Disciplina" />
-					</f:facet>
-					<h:link outcome="/gradeCurricular/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemDisciplina" value="#{_item.disciplina.nome}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Classificação" />
-					</f:facet>
-					<h:link outcome="/gradeCurricular/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemClassificacao"
-							value="#{_item.classificacao.description}" />
-					</h:link>
-				</h:column>
-			</h:dataTable>
-			<ui:include src="/resources/scaffold/paginator.xhtml">
-				<ui:param name="paginatorBean" value='#{gradeCurricularBean}' />
-			</ui:include>
+				</b:dataTableColumn>
+				<b:dataTableColumn id="_itemCurriculo" value="#{_item.curriculo}"
+					label="Currículo" />
+				<b:dataTableColumn id="_itemCurso"
+					value="#{_item.curriculo.curso.nome}" label="Curso" />
+				<b:dataTableColumn id="_itemPeriodo" value="#{_item.periodo}"
+					label="Período" />
+				<b:dataTableColumn id="_itemDisciplina"
+					value="#{_item.disciplina.nome}" label="Disciplina" />
+				<b:dataTableColumn id="_itemClassificacao"
+					value="#{_item.classificacao.description}" label="Classificação" />
+			</b:dataTable>
 		</h:form>
-
 	</ui:define>
 
 </ui:composition>

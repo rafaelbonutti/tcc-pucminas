@@ -5,7 +5,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:forgeview="http://jboss.org/forge/view"
-	template="/resources/scaffold/pageTemplate.xhtml">
+	template="/resources/scaffold/pageTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui">
 
 	<f:metadata>
 		<f:viewParam name="page" value='#{curriculoBean.page}' />
@@ -18,90 +19,40 @@
 		Curriculo
 	</ui:define>
 
-	<!-- 	<ui:define name="subheader">
-		Search Curriculo entities
-	</ui:define> -->
+	<ui:define name="subheader">
+		<b:row>
+			<b:column>
+				<b:buttonToolbar styleClass="pull-right">
+					<b:buttonGroup>
+						<b:button value="Novo" outcome="create" look="primary"
+							iconAwesome="plus" />
+					</b:buttonGroup>
+				</b:buttonToolbar>
+			</b:column>
+		</b:row>
+	</ui:define>
 
 	<ui:define name="footer" />
 
 	<ui:define name="main">
 		<h:form id="search">
-			<f:validateBean disabled="true">
-				<h:panelGroup styleClass="container">
-
-<!-- 					<h:panelGrid columnClasses="label,component,required" columns="3">
-						<h:outputLabel for="curriculoBeanExampleSemestre"
-							value="Semestre:" />
-						<h:panelGroup>
-							<h:inputText id="curriculoBeanExampleSemestre" maxLength="1"
-								value="#{curriculoBean.example.semestre}" />
-							<h:message for="curriculoBeanExampleSemestre" styleClass="error" />
-						</h:panelGroup>
-						<h:outputText />
-						<h:outputLabel for="curriculoBeanExampleAno" value="Ano:" />
-						<h:panelGroup>
-							<h:inputText id="curriculoBeanExampleAno" maxLength="4"
-								value="#{curriculoBean.example.ano}" />
-							<h:message for="curriculoBeanExampleAno" styleClass="error" />
-						</h:panelGroup>
-						<h:outputText />
-						<h:outputLabel for="curriculoBeanExampleCurso" value="Curso:" />
-						<h:panelGroup>
-							<h:selectOneMenu converter="#{cursoBean.converter}"
-								id="curriculoBeanExampleCurso"
-								value="#{curriculoBean.example.curso}">
-								<f:selectItem />
-								<f:selectItems itemLabel="#{forgeview:display(_item)}"
-									itemValue="#{_item}" value="#{cursoBean.all}" var="_item" />
-							</h:selectOneMenu>
-							<h:message for="curriculoBeanExampleCurso" styleClass="error" />
-						</h:panelGroup>
-						<h:outputText />
-					</h:panelGrid> -->
-					<h:panelGroup styleClass="buttons">
-						<h:commandLink value="Search" action='#{curriculoBean.search}'
-							styleClass="btn btn-primary" />
-						<h:commandLink value="Create New" action='#{curriculoBean.create}'
-							styleClass="btn btn-primary" />
-					</h:panelGroup>
-				</h:panelGroup>
-			</f:validateBean>
-
-			<h:dataTable id="curriculoBeanPageItems" styleClass="data-table"
+			<b:dataTable id="curriculoBeanPageItems" styleClass="data-table"
+				searching="false" paginated="false" responsive="true"
+				custom-lang-url="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
 				value="#{curriculoBean.pageItems}" var="_item">
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Semestre" />
-					</f:facet>
+				<b:dataTableColumn label="ID">
 					<h:link outcome="/curriculo/view">
 						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemSemestre" value="#{_item.semestre}" />
+						<h:outputText id="_itemId" value="#{_item.id}" />
 					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Ano" />
-					</f:facet>
-					<h:link outcome="/curriculo/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemAno" value="#{_item.ano}" />
-					</h:link>
-				</h:column>
-				<h:column>
-					<f:facet name="header">
-						<h:outputText value="Curso" />
-					</f:facet>
-					<h:link outcome="/curriculo/view">
-						<f:param name="id" value="#{_item.id}" />
-						<h:outputText id="_itemCurso" value="#{_item.curso.nome}" />
-					</h:link>
-				</h:column>
-			</h:dataTable>
-			<ui:include src="/resources/scaffold/paginator.xhtml">
-				<ui:param name="paginatorBean" value='#{curriculoBean}' />
-			</ui:include>
+				</b:dataTableColumn>
+				<b:dataTableColumn id="_itemSemestre" value="#{_item.semestre}"
+					label="Semestre" />
+				<b:dataTableColumn id="_itemAno" value="#{_item.ano}" label="Ano" />
+				<b:dataTableColumn id="_itemCurso" value="#{_item.curso.nome}"
+					label="Curso" />
+			</b:dataTable>
 		</h:form>
-
 	</ui:define>
 
 </ui:composition>

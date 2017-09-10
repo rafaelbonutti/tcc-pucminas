@@ -2,7 +2,6 @@ package br.pucminas.web.view;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,16 +31,11 @@ import com.netflix.ribbon.hystrix.FallbackHandler;
 
 import br.pucminas.web.consul.ConsulServices;
 import br.pucminas.web.consul.ServiceDiscovery;
-import br.pucminas.web.model.Disciplina;
 import br.pucminas.web.model.GradeCurricular;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import rx.Observable;
 import rx.observables.BlockingObservable;
-
-/**
- * Backing bean for GradeCurricular entities.
- */
 
 @Named
 @Stateful
@@ -89,9 +83,6 @@ public class GradeCurricularBean implements Serializable {
 		return "create?faces-redirect=true";
 	}
 
-	List<Disciplina> disciplinas = new ArrayList<Disciplina>();
-	@Inject DisciplinaBean disciplinaBean;
-
 	public void retrieve() {
 
 		if (FacesContext.getCurrentInstance().isPostback()) {
@@ -103,13 +94,11 @@ public class GradeCurricularBean implements Serializable {
 			this.conversation.setTimeout(1800000L);
 		}
 
-		/*		if (this.id == null) {
+		if (this.id == null) {
 			this.gradeCurricular = this.example;
-			this.disciplinas = disciplinaBean.getAll();
 		} else {
 			this.gradeCurricular = findById(getId());
-			this.gradeCurricular.setDisciplina(disciplinaBean.findById(gradeCurricular.getDisciplinaId()));
-		}*/
+		}
 	}
 
 	public GradeCurricular findById(Long id) {
@@ -292,9 +281,6 @@ public class GradeCurricularBean implements Serializable {
 			this.pageItems = gson.fromJson(payload, new TypeToken<List<GradeCurricular>>(){}.getType());
 		}
 
-		//TODO - refazer com outra estratégia de integração de dados (ex: view materializada)
-		//		for(GradeCurricular item : this.pageItems)
-		//			item.setDisciplina(disciplinaBean.findById(item.getDisciplinaId()));
 	}
 
 	public List<GradeCurricular> getPageItems() {
