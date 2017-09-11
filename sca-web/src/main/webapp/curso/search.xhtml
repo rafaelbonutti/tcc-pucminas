@@ -23,7 +23,7 @@
 			<b:column>
 				<b:buttonToolbar styleClass="pull-right">
 					<b:buttonGroup>
-						<b:button value="Novo" outcome="create" look="primary"
+						<b:button value="Novo Curso" outcome="create" look="primary"
 							iconAwesome="plus" />
 					</b:buttonGroup>
 				</b:buttonToolbar>
@@ -49,6 +49,12 @@
 				<b:dataTableColumn value="#{_item.nome}" label="Nome" />
 				<b:dataTableColumn value="#{_item.descricao}" label="Descrição" />
 				<b:dataTableColumn value="#{_item.modalidade}" label="Modalidade" />
+				<b:dataTableColumn label="Editar" orderable="false">
+					<b:button value="Editar" outcome="/curso/create" look="primary"
+						iconAwesome="edit">
+						<f:param name="id" value="#{_item.id}" />
+					</b:button>
+				</b:dataTableColumn>
 			</b:dataTable>
 		</h:form>
 	</ui:define>
