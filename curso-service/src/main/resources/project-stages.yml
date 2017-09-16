@@ -31,7 +31,7 @@ swarm:
   port:
     offset: 15
   bind:
-    address: 172.31.11.198
+    address: 172.31.8.146
   topology:
     consul:
       url: http://127.0.0.1:8500

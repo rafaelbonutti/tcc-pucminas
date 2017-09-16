@@ -23,4 +23,4 @@ swarm:
     address: 172.31.8.146
   topology:
     consul:
-      url: http://172.31.8.146:8500
+      url: http://127.0.0.1:8500
