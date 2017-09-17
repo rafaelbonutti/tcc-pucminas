@@ -42,7 +42,7 @@ public class DisciplinaEndpoint {
 	@ApiResponses(
 			@ApiResponse(
 					code=201,
-					message="Curso inserido com sucesso",
+					message="Disciplina inserida com sucesso",
 					response = Disciplina.class))
 	public Response create(@ApiParam(value = "Disciplina a ser inserida", required = true) Disciplina entity) {
 		em.persist(entity);
@@ -53,6 +53,14 @@ public class DisciplinaEndpoint {
 
 	@DELETE
 	@Path("/{id:[0-9][0-9]*}")
+	@ApiOperation( 
+			value = "Exclui uma Disciplina pelo ID",  
+			response = Disciplina.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "A Disciplina não existe" )    
+	} )
 	public Response deleteById(@PathParam("id") Long id) {
 		Disciplina entity = em.find(Disciplina.class, id);
 		if (entity == null) {
@@ -65,6 +73,14 @@ public class DisciplinaEndpoint {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json; charset=utf-8")
+	@ApiOperation( 
+			value = "Recupera uma Disciplina pelo ID",  
+			response = Disciplina.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "A Disciplina não existe" )
+	} )
 	public Response findById(@PathParam("id") Long id) {
 		TypedQuery<Disciplina> findByIdQuery = em
 				.createQuery(
@@ -85,6 +101,13 @@ public class DisciplinaEndpoint {
 
 	@GET
 	@Produces("application/json; charset=utf-8")
+	@ApiOperation( 
+			value = "Lista todos as Disciplinas",
+			notes = "Lista todos as Disciplinas. Suporta paginação dos resultados",
+			response = Disciplina.class, 
+			responseContainer = "List"
+			)
+	@ApiResponses(@ApiResponse( code = 200, message = "Operação realizada com sucesso" ))
 	public List<Disciplina> listAll(@QueryParam("start") Integer startPosition,
 			@QueryParam("max") Integer maxResult) {
 		TypedQuery<Disciplina> findAllQuery = em.createQuery(
@@ -103,6 +126,16 @@ public class DisciplinaEndpoint {
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
 	@Consumes("application/json; charset=utf-8")
+	@ApiOperation( 
+			value = "Atualiza uma Disciplina pelo ID",  
+			response = Disciplina.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 400, message = "A Disciplina ou ID está nulo" ),
+		@ApiResponse( code = 404, message = "A Disciplina não existe" ),
+		@ApiResponse( code = 409, message = "ID diferente do ID da Disciplina informada" )
+	} )
 	public Response update(@PathParam("id") Long id, Disciplina entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();

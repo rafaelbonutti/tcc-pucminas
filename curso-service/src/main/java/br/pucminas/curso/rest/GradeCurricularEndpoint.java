@@ -21,10 +21,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
+import br.pucminas.curso.model.Curso;
 import br.pucminas.curso.model.GradeCurricular;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Stateless
 @Path("/gradescurriculares")
@@ -47,6 +50,14 @@ public class GradeCurricularEndpoint {
 
 	@DELETE
 	@Path("/{id:[0-9][0-9]*}")
+	@ApiOperation( 
+			value = "Exclui uma Grade Curricular pelo ID",  
+			response = Curso.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "A Grade Curricular não existe" )    
+	} )
 	public Response deleteById(@PathParam("id") Long id) {
 		GradeCurricular entity = em.find(GradeCurricular.class, id);
 		if (entity == null) {
@@ -59,7 +70,15 @@ public class GradeCurricularEndpoint {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json")
-	public Response findById(@PathParam("id") Long id) {
+	@ApiOperation( 
+			value = "Recupera uma Grade Curricular pelo ID",  
+			response = Curso.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 404, message = "A Grade Curricular não existe" )
+	} )
+	public Response findById(@ApiParam( value = "ID da Grade Curricular", required = true) @PathParam("id") Long id) {
 		TypedQuery<GradeCurricular> findByIdQuery = em
 				.createQuery(
 						"SELECT DISTINCT g FROM GradeCurricular g LEFT JOIN FETCH g.curriculo WHERE g.id = :entityId ORDER BY g.id",
@@ -79,9 +98,16 @@ public class GradeCurricularEndpoint {
 
 	@GET
 	@Produces("application/json")
-	public List<GradeCurricular> listAll(
-			@QueryParam("start") Integer startPosition,
-			@QueryParam("max") Integer maxResult) {
+	@ApiOperation( 
+			value = "Lista todos as Grades Curriculares",
+			notes = "Lista todos as Grades Curriculares. Suporta paginação dos resultados",
+			response = Curso.class, 
+			responseContainer = "List"
+			)
+	@ApiResponses(@ApiResponse( code = 200, message = "Operação realizada com sucesso" ))
+	public List<GradeCurricular> listAll(@ApiParam( value = "Página", required = false) @QueryParam("start") Integer startPosition,
+			@ApiParam( value = "Número de registros por página", required = false) @QueryParam("max") Integer maxResult)
+	{
 		TypedQuery<GradeCurricular> findAllQuery = em
 				.createQuery(
 						"SELECT DISTINCT g FROM GradeCurricular g LEFT JOIN FETCH g.curriculo ORDER BY g.id",
@@ -99,6 +125,13 @@ public class GradeCurricularEndpoint {
 	@GET
 	@Produces("application/json")
 	@Path("/curriculo/{id:[0-9][0-9]*}")
+	@ApiOperation( 
+			value = "Lista todos as Grades Curriculares de um determinado Currículo/Curso",
+			notes = "Lista todos as Grades Curriculares de um determinado Currículo/Curso. Suporta paginação dos resultados",
+			response = Curso.class, 
+			responseContainer = "List"
+			)
+	@ApiResponses(@ApiResponse( code = 200, message = "Operação realizada com sucesso" ))
 	public List<GradeCurricular> listAllByCurriculo(
 			@PathParam("id") Long curriculoId) {
 		TypedQuery<GradeCurricular> findAllQuery = em
@@ -114,6 +147,16 @@ public class GradeCurricularEndpoint {
 	@PUT
 	@Path("/{id:[0-9][0-9]*}")
 	@Consumes("application/json")
+	@ApiOperation( 
+			value = "Atualiza uma Grade Curricular pelo ID",  
+			response = GradeCurricular.class
+			)
+	@ApiResponses( {
+		@ApiResponse( code = 200, message = "Operação realizada com sucesso" ),
+		@ApiResponse( code = 400, message = "A Grade Curricular ou ID está nulo" ),
+		@ApiResponse( code = 404, message = "A Grade Curricular não existe" ),
+		@ApiResponse( code = 409, message = "ID diferente do ID da Grade Curricular informada" )
+	} )
 	public Response update(@PathParam("id") Long id, GradeCurricular entity) {
 		if (entity == null) {
 			return Response.status(Status.BAD_REQUEST).build();
