@@ -60,6 +60,13 @@ public class DisciplinaBean implements Serializable {
 	 * Support creating and retrieving Disciplina entities
 	 */
 
+	/*
+	@Resource
+	private SessionContext sessionContext;
+	KeycloakPrincipal<KeycloakSecurityContext> kcPrincipal = (KeycloakPrincipal<KeycloakSecurityContext>)(sessionContext.getCallerPrincipal());
+	IDToken idToken = kcPrincipal.getKeycloakSecurityContext().getIdToken();
+	 */
+
 	private Long id;
 
 	public Long getId() {
@@ -130,9 +137,9 @@ public class DisciplinaBean implements Serializable {
 
 		if (this.id == null)
 			return insert();
-		
+
 		this.conversation.end();
-		
+
 		try {
 			Response response = services
 					.getDisciplinaService()
@@ -295,7 +302,7 @@ public class DisciplinaBean implements Serializable {
 	public long getCount() {
 		return this.count;
 	}
-	
+
 	private ByteBuf disciplinaCachedResults = Unpooled.buffer();
 
 	/*

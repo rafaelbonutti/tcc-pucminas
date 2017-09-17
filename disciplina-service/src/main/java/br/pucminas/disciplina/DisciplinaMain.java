@@ -3,7 +3,7 @@ package br.pucminas.disciplina;
 import org.wildfly.swarm.Swarm;
 import org.wildfly.swarm.topology.Advertise;
 
-@Advertise("disciplina-service")
+@Advertise(value="disciplina-service", tags={"urlprefix-/rest/disciplinas"})
 public class DisciplinaMain {
 
 	public static void main(String[] args) throws Exception {
