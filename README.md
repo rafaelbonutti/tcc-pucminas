@@ -1,5 +1,6 @@
-# tcc-pucminas
-Trabalho de Conclusão de Curso - Sistema de Controle Acadêmico
+# SCA - Sistema de Controle Acadêmico
+
+Trabalho de Conclusão de Curso
 
 ## Prova de Conceito: ##
 > http://ec2-54-233-147-179.sa-east-1.compute.amazonaws.com:8080/index.jsf
