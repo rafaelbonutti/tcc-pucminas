@@ -42,16 +42,17 @@
 				<b:selectOneMenu id="cursoBeanCursoModalidade" label="Modalidade"
 					required="true" colMd="9" labelColMd="3"
 					value="#{cursoBean.curso.modalidade}">
-					<f:selectItem itemLabel="--SELECIONE--" />
+					<f:selectItem itemLabel="--SELECIONE--" noSelectionOption="true" />
 					<f:selectItem itemValue="BACHARELADO" />
 					<f:selectItem itemValue="LICENCIATURA" />
 					<f:selectItem itemValue="TECNOLOGO" />
 				</b:selectOneMenu>
 				<h:message for="cursoBeanCursoModalidade" styleClass="error" />
 				<b:selectOneMenu id="cursoBeanCursoCurriculoAtual"
-					label="Currículo Atual" required="true" colMd="9" labelColMd="3"
+					converter="omnifaces.SelectItemsConverter" label="Currículo Atual"
+					required="false" colMd="9" labelColMd="3"
 					value="#{cursoBean.curso.curriculoAtual}">
-					<f:selectItem itemLabel="--SELECIONE--" />
+					<f:selectItem itemLabel="--SELECIONE--" noSelectionOption="true" />
 					<f:selectItems itemLabel="#{_item}" itemValue="#{_item}"
 						value="#{cursoBean.curso.curriculo}" var="_item" />
 				</b:selectOneMenu>
